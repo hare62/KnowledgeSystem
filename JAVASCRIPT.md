@@ -596,23 +596,18 @@ JavaScript 语言的对象体系，不是基于“类”的，而是基于构造
 >
 **☆new操作符在创建实例的时候经历了哪几个阶段**TODO
 >
-> new创建了一个对象，共经历了4个阶段：
->
-> \1. 创建一个空对象
->
-> \2. 设置原型链
->
-> \3. 让实例化对象中的this指向对象，并执行函数体
->
-> \4. 判断实例化对象的返回值类型
-> 
->创建一个空对象，作为将要返回的对象实例。
->
->构造函数的prototype属性指向空对象。
->
->将这个空对象赋值给函数内部的this关键字。
->
->开始执行构造函数内部的代码。
+
+```
+new创建了一个对象，共经历了4个阶段：
+\1. 创建一个空对象
+\2. 设置原型链
+\3. 让实例化对象中的this指向对象，并执行函数体
+\4. 判断实例化对象的返回值类型
+创建一个空对象，作为将要返回的对象实例。
+构造函数的prototype属性指向空对象。
+将这个空对象赋值给函数内部的this关键字。
+开始执行构造函数内部的代码。
+```
 >
 **异步编程的实现方式**
 >
@@ -717,69 +712,6 @@ function Trim(str){
 str.replace(/\s/ig,'')
 ```
 
-**如何实现数组的随机排序****?**
->
-> 最快是给数组添加原生sort()方法,可以随机数组,如果sort(),方法没有参数的话,就是依照数据的unicode ['junɪˌkod]码排序的
->
-> 可以在sort()中添加一个比较函数函数:
->
-> function(a,b){  return Math.rendom()>.5? -1:1  }
->
-> Math.rendom()在0到1之间生成一个随机数
->
->
-**图片懒加载理解：**
->由于商城图片过多时，就会给图片加一个懒加载的缓冲效果。当图片进入可视化区域的时候才会加载，否则图片只是一个空标签。这样可以优化页面渲染速度，提升用户体验。
->
-**思路：**将页面中的所有img属性src用data-src代替，当页面滚动至此图片出现在可视区域时，用js取到该图片的data-src值赋给src。
->
-> 
->
-**所用知识点：**
->
-> 浏览器可视区域的宽高：
->
-> js :   document.body.clientWidth/clientHeight
->
-> jquery:  var windHeight = $(window).width()/$(window).height();
->
-> 获取滚动条相对于顶部的高度:
->
-> js :  document.body.scrollTop;
->
-> jquery :  var  scrollTop=$(window).scrollTop;
->
-> 获得元素对于浏览器顶部的高度:
->
-> js :  DOM元素.offsetTop;
->
-> jquery:  var imgTop=$('img').offset().top
->
-> 判断元素是否出现在浏览器的可视化区域内:
->
-> 元素相对于顶部的高度 - 浏览器可视化区域的高度 < 小于滚动条到顶部的高度  
->
-> 成立就代表出现 : 不成立就没出现
->
-> 怎样排除首屏的图片
->
-> 元素到顶部距离 - 浏览器的可视化高度  >  0
->
-> 排除已加载的图片
->
-> $(this).attr(‘src’) != $(this).attr(‘data-src’)  //排除已加载的图片
->
-**js中常见的内存泄漏：**
->
-> \1. 内存泄漏会导致一系列问题，比如：运行缓慢、崩溃、高延迟
->
-> \2. 内存泄漏是指你用不到（访问不到）的变量，依然占据着内存空间，不能被再次利用起来
->
-> \3. 意外的全局变量，这些都是不会被回收的变量（除非设置null或者被重新赋值），特别是那些用来临时存储大量信息的变量
->
-> \4. 周期函数一直在运行，处理函数并不会被回收，jq在移除节点前都会，将事件监听移除
->
-> \5. js代码中有对DOM节点的引用，dom节点被移除的时候，引用还维持
 >
 **深拷贝和浅拷贝的问题：**TODO
 >
@@ -795,9 +727,6 @@ str.replace(/\s/ig,'')
 >
 **显示转换与隐式转换**
 >
-> JS中有5中简单的数据类型（也称之为基本数据类型）：undefined、Null、Boolean、Number、String。还有一种复杂的数据--------Object，Object本质是一组无序的名值对组成的。
->
-> 对一个值使用typeof操作符可以返回该值的数据类型，typeof操作符会返回一些令人迷惑但技术上却正确的值，比如调用typeof null会返回“object”，应为特殊值null被认为是一个空的对象引用。
 >
 **显式转换：**主要通过JS定义的数据转换方法TODO
 >
@@ -815,34 +744,24 @@ str.replace(/\s/ig,'')
 >
 > ​    Underfined           n/a                   undefined
 >
-**隐式转换：**是系统默认的，不需要加以声明就可以进行的转换。一般情况下，数据的类型转换通常是由编译系统自动进行的，不需要人工干预
+**隐式转换：**
+>是系统默认的，不需要加以声明就可以进行的转换。一般情况下，数据的类型转换通常是由编译系统自动进行的，不需要人工干预
 >
-> 大致规则如下：
->
-> \1. 对象和布尔值比较
->
-> 对象和布尔值比较时，对象先转换为字符串，然后再转换为数字，布尔值直接转换为数字
->
-> \2. 对象和字符串比较
->
-> 对象和字符串进行比较时，对象转换为字符串，然后两者进行比较
->
-> \3. 对象和数字比较
->
-> 对象和数字进行比较时，字符串转换为数字，二者再比较
->
-> \4. 字符串和数字比较
->
-> 字符串和数字进行比较时，字符串转换成数字，二者再比较，true=1，false=0
->
-> \5. 字符串和布尔值比较
->
-> 字符串和布尔值进行比较时，二者全部转换成数值再比较
->
-> \6. 布尔值和数字比较
->
-> 布尔值和数字进行比较时，布尔转换为数字，二者比较
->
+```
+大致规则如下：
+\1. 对象和布尔值比较
+对象和布尔值比较时，对象先转换为字符串，然后再转换为数字，布尔值直接转换为数字
+\2. 对象和字符串比较
+对象和字符串进行比较时，对象转换为字符串，然后两者进行比较
+\3. 对象和数字比较
+对象和数字进行比较时，字符串转换为数字，二者再比较
+\4. 字符串和数字比较
+字符串和数字进行比较时，字符串转换成数字，二者再比较，true=1，false=0
+\5. 字符串和布尔值比较
+字符串和布尔值进行比较时，二者全部转换成数值再比较
+\6. 布尔值和数字比较
+布尔值和数字进行比较时，布尔转换为数字，二者比较
+```
 **父元素和子元素分别有点击事件的情况下****:**
 >
 > 点击父元素只会触发父元素事件,不会影响到子元素,如果点击子元素,会因为冒泡触发父元素的点击事件,可是阻止默认冒泡事件;
@@ -855,66 +774,29 @@ str.replace(/\s/ig,'')
 >
 > 
 >
-**ForEach和map的区别在哪里:**
+**ForEach和map的区别在哪里:** TODO
 >
-> 这两个API都可以遍历数组
->
-> forEach函数,是给数组中的每个都执行一遍回调函数,不会返回一个值
->
-> |      |                                                              |
-> | ---- | ------------------------------------------------------------ |
-> |      | ![https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/958C476FC7BD4E07A95503383DB6E134/4566](https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/958C476FC7BD4E07A95503383DB6E134/4566) |
->
-> Map方法是通过调用数组中的每个元素,映射到新元素中,从而返回一个新数组
->
-> 如果是复合型类型时，如果只改变复合类型的其中某个value时，将可以正常使用
->
-**JS判断设备来源**
->
-**function** **deviceType**(){
->
-> ​    **var** ua = navigator.userAgent;
->
-> ​    **var** agent = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];   
->
-> ​    **for**(**var** i=0; i<len,len = agent.length; i++){
->
-> ​      **if**(ua.indexOf(agent[i])>0){     
->
-> ​        **break**;
->
-> ​      }
->
-> ​    }
->
-> }
->
-> deviceType();
->
-> window.addEventListener('resize', **function**(){
->
-> ​    deviceType();
->
-> })
->
-> //微信的 有些不太一样
->
-> **function** **isWeixin**(){
->
-> ​    **var** ua = navigator.userAgent.toLowerCase();
->
-> ​    **if**(ua.match(/MicroMessenger/i)=='micromessenger'){
->
-> ​      **return** true;
->
-> ​    }**else**{
->
-> ​      **return** false;
->
-> ​    }
->
-> }
->
+
+```
+相同点：
+这两个API都可以遍历数组
+
+
+不同点：
+forEach函数：
+是给数组中的每个都执行一遍回调函数,不会返回一个值
+Map方法：
+是通过调用数组中的每个元素,映射到新元素中,从而返回一个新数组
+
+forEach更多的用来遍历数组 是没有返回值的 
+for in 一般常用来遍历对象或json。for...in...返回的是无顺序的key，因此最好不要用来遍历数组
+for...of一般用来遍历数组，不能遍历普通的对象，需要通过和Object.keys()搭配使用。可以遍历数组、Set和Map结构、对象，以及字符串还有
+某些类似数组的对象
+for in循环出的是key，for of循环出的是value
+推荐在循环对象属性的时候，使用for...in,在遍历数组的时候的时候使用for...of
+```
+
+
 **DOM元素的e的e.getAttribute(propName)和e.propName有什么区别和联系?**TODO
 >
 > e.getAttribute()是标准DOM操作文档元素属性的方法,具有通用性可在任意文档上使用，返回元素在源文件中设置的属性
@@ -1414,15 +1296,13 @@ str.replace(/\s/ig,'')
 >
 > 当要求动态上下文的时候，就不能够使用箭头函数，也就是this的固定化。
 >
-> \1. 在使用=>定义函数的时候，this的指向是定义时所在的对象，而不是使用时所在的对象；
+> \1. 没有this，this的指向是定义时所在的对象，而不是使用时所在的对象；
 >
 > \2. 不能够用作构造函数，这就是说，不能够使用new命令，否则就会抛出一个错误。
 >
 > \3. 不能够使用arguments对象；
 >
 > \4. 不能使用yield命令
->
-> 箭头函数是函数的一种简写形式，使用括号包裹参数，跟随一个=>，紧接着是函数体
 >
 > 箭头函数最直观的三个特点：
 >
@@ -1431,191 +1311,36 @@ str.replace(/\s/ig,'')
 > 省略return关键字
 >
 > 修复了this指向
+> 
 **let、const、var**
 >
-> var声明变量的作用域限制在其声明位置的上下文中，而非声明变量总是全局的
->
-> 由于变量声明（以及其他声明）总是在任意代码执行之前处理的，所以在代码中的任意位置声明变量总是等效于在代码开头声明；
->
-> let是更完美的var，不是全局变量，具有块级函数作用域，大多数情况不会发生变量提升。
->
-> \1. let声明的变量具有块级作用域
->
-> \2. let生命的变量不能通过window.变量名访问
->
-> \3. 形如for(let x...)的循环是每次迭代都为x创建新的绑定
->
-> \4. let约束了变量提升
->
-> \5. let不允许在相同作用域内重复声明同一个变量名，var是允许的
->
-> const定义的常量值，不能够重新赋值，如果值是一个对象，可以改变对象里边的属性值。const变量声明的时候必须初始化
+ ```
+ \1. let声明的变量具有块级作用域
+ \2. let生命的变量不能通过window.变量名访问
+ \3. 形如for(let x...)的循环是每次迭代都为x创建新的绑定
+ \4. let约束了变量提升
+ \5. let不允许在相同作用域内重复声明同一个变量名，var是允许的
+ \6.const定义的常量值，不能够重新赋值，如果值是一个对象，可以改变对象里边的属性值。const变量声明的时候必须初始化
+ ```
 
-**Set数据结构**TODO
->
-> ES6中的Set方法本身是一个构造函数，它类似于数组，但是成员的值都是唯一的
->
-**拓展：数组去重的方法**
->
-> ES6 set方法
->
-> var arr = new Set([1,2,2,3,4]);
->
-> console.log([...arr]); //(4) [1, 2, 3, 4]
->
-> 以往去重方法
->
-> var arr = [1,1,2,2,3,4];
->
-> //创建一个空数组用于接收不重复内容的数组
->
-> var new_arr = [];
->
-> for(var i = 0;i<arr.length;i++){
->
-> ​    if(new_arr.indexOf(arr[i])==-1){ //判断arr[i]在new_arr中是否存在相同的内容,不存在则push到数组中
->
-> ​      new_arr.push(arr[i])
->
-> ​    }
->
-> }
->
-> console.log(new_arr); //(4) [1, 2, 3, 4]
->
->
 
  **async函数的基本用法:**
 >
 > asyn函数返回一个Promise对象，可以使用then方法添加回调函数。当函数执行的时候，一旦遇到await就会先返回，等到异步操作完成，再接着执行函数体内后面的语句。函数前面的async关键字，表明该函数内部有异步操作。调用该函数时，会立即返回一个Promise对象。由于async函数返回的是Promise对象，可以作为await命令的参数。
 >
-**ES6 async函数有多种使用形式：**
->
-> //函数声明
->
-> async function foo(){}
->
-> //函数表达式
->
-> const foo = async function(){}
->
-> 
->
-> //对象的方法
->
-> let obj = {async foo()}
->
-> obj.foo().then(...)
->
-> 
->
-> //class方法
->
-> class Storage{
->
-> constructor(){
->
-> this.cachePromise = cache.open("avatars")
->
-> }
->
-> async getAvatar(name){
->
-> const cache = await this.cachePromise;
->
-> return cache.match(`/avatars/${name}.jpg`)
->
-> }
->
-> }
->
->
+
 **async与generator的区别?**
 >
-> async函数是Generator函数的语法糖，async函数就是将Generator函数的星号（*）替换成async，将yield替换成await。
->
-> async函数对Generator函数的改进，体现在以下四点：
->
-> 1、内置执行器
->
-> 2、更好的语义：async表示函数里有异步操作，await表示紧跟在后面的表达式需要等待结果
->
-> 3、更广的适用性：async函数的awai他命令后面，可以是Promise对象和原始类型的值（数字、字符串和布尔值，但这时等同于同步操作）
->
-> 4、返回值是Promise：async函数的返回值是Peomise对象，这比Generator函数的返回值是Iterator对象方便对了，可以用then方法指定下一步的操作。
->
-> 进一步说，async函数完全可以看作多个异步操作包装成的一个Promise对象，而await命令就是内部then命令的语法糖
->
-> **简单实现****async/await中的async函数**
->
-> async函数的实现原理，就是将Generator函数和自动执行器，包装在一个函数里
->
-> function spawn(**genF**){
->
-> **return** **new** Promise(function(**resolve**,**reject**){
->
-> const gen **=** genF();
->
-> function step(**nextF**){
->
-> let next;
->
-> *//ry/catch/finally 语句用于处理代码中可能出现的错误信息。*
->
-> **try** {
->
-> next **=** nextF()
->
-> }**catch**(e){
->
-> **return** reject(e);
->
-> }
->
-> **if**(next **.***done*){
->
-> **return** resolve(next**.***value*);
->
-> }
->
-> Promise**.**resolve(next**.***value*)**.**then(
->
-> function(**v**){
->
-> step(function(){
->
-> **return** gen**.**next(v)
->
-> });
->
-> },
->
-> function(**v**){
->
-> step(function(){
->
-> **return** gen**.**throw(e)
->
-> });
->
-> }
->
-> )
->
-> }
->
-> step(function(){
->
-> **return** gen**.**next(undefined);
->
-> });
->
-> })
->
-> }
->
-> 
->
+```
+async函数是Generator函数的语法糖，async函数就是将Generator函数的星号（*）替换成async，将yield替换成await。
+async函数对Generator函数的改进，体现在以下四点：
+1、内置执行器
+2、更好的语义：async表示函数里有异步操作，await表示紧跟在后面的表达式需要等待结果
+3、更广的适用性：async函数的awai他命令后面，可以是Promise对象和原始类型的值（数字、字符串和布尔值，但这时等同于同步操作）
+4、返回值是Promise：async函数的返回值是Peomise对象，这比Generator函数的返回值是Iterator对象方便对了，可以用then方法指定下一步的操作。
+进一步说，async函数完全可以看作多个异步操作包装成的一个Promise对象，而await命令就是内部then命令的语法糖
+```
+
 **有用过****promise吗？请写出下列代码的执行结果，并写出你的理解思路：**TODO
 ```
 setTimeout(()=>{
@@ -1631,162 +1356,39 @@ setTimeout(()=>{
 ​    console.log(4)
 })
 console.log(5)// 2 3 5 4 1 
+
 ```
-> · 首先要讲一下，js是单线程执行，那么代码的执行就有先后; 
+>解释：
+宏任务：[task1,task2,task3…]颗粒度大 实时性不强，要排队
+微任务：缩小颗粒度[task1[m1…],task2[m1…],task3[m1…]]，直接插队，实时性强
 >
-> · 有先后，那就要有规则(排队)，不然就乱套了，那么如何分先后呢？大体分两种：同步、异步; 
+>微任务：在上一个宏任务之后，下一个宏任务之前执行。
+第一个 script 标签的代码是第一个宏任务
 >
-> · 同步很好理解，就不用多说了(我就是老大,你们都要给我让路); 
->
-> · 异步(定时器[setTimeout ，setInterval]、事件、ajax、promise等)，说到异步又要细分宏任务、微任务两种机制， 
->
-> · 宏任务：js异步执行过程中遇到宏任务，就先执行宏任务，将宏任务加入执行的队列(event queue),然后再去执行微任务; 
->
-> · 微任务：js异步执行过程中遇到微任务，也会将任务加入执行的队列([event queue](https://www.toutiao.com/i6606779850801807885/))，但是注意这两个queue身份是不一样的，不是你先进来，就你先出去的（就像宫里的皇上选妃侍寝一样，不是你先进宫(或先来排队)就先宠幸的 ），真执行的时候是先微任务里拿对应回调函数，然后才轮到宏任务的队列回调执行的; 
->
-> · 理解了这个顺序，那上面的结果也就不难懂了。
+>promise里面是同步，promise.then()是微任务，setTimeout是宏任务。
+异步任务大致分为：微任务（micro task，如：promise.then、MutaionObserver等）和宏任务（macro task，如：setTimeout、setInterval、I/O等）。
 >
 **Object.is（）与原来的比较操作符===，==的区别？**
 >
-> · ==相等运算符，比较时会自动进行数据类型转换
->
-> · ===严格相等运算符，比较时不进行隐式类型转换
->
-> · Object.is同值相等算法，在===基础上对0和NaN特别处理
->
-> +0 === -0 //true
->
-> NaN === NaN // false
->
-> Object.is(+0, -0) // false
->
-> Object.is(NaN, NaN) // true
->
-> 
->
-> **ES6新特性详细介绍说明：**
->
-> **变量声明：****const和let：**
->
-> ES6推荐使用let声明局部变量，相比之前的var（无论声明在何处，都会被视为声明在函数的最顶部），而let不会将声明变量提前；
->
-> let表示声明变量，而const表示声明常量，两者都为块级作用域；const声明的变量都会被认为是常量，意思就是它的值被设置完成后就不能再修改了。
->
-**注意：**let关键词声明的变量不具备变量提升的特性
->
-> const和let声明只在最高进的一个块中（花括号内）有效
->
-> const在声明时必须被赋值
->
->
-**类和继承：**
->
-> class和extend是一种语法糖，也是基于原型继承实现的
->
-> class和super calls，实例化，静态方法和构造函数
->
-> <script>
->
-> ​    //class声明类 内部直接是属性和方法 不用,分隔。 constructor
->
-> ​    class Person{
->
-> ​      constructor(name, age){
->
-> ​        this.name = name;//实例属性
->
-> ​        this.age = age;
->
-> ​        console.log(name,age)
->
-> ​      }
->
-> ​      sayhi(name){
->
-> ​        //使用ES6新特性字符串模块,注意外层包裹符号是``反引号来创建字符串,内部变量使用${}
->
-> ​        console.log(`this name is ${this.name}`);
->
-> ​        //以往的写法
->
-> ​        console.log('my age is '+this.age)
->
-> ​      }
->
-> ​    }
->
-> ​    
->
-> 
->
-> ​    class Programmer extends Person{
->
-> ​      constructor(name,age){
->
-> ​        //直接调用父类结构器进行初始化
->
-> ​        super(name,age)
->
-> ​      }
->
-> ​      program(){
->
-> ​        console.log("I'm coding...")
->
-> ​      }
->
-> ​    }
->
-> ​    var anim = new Person("张三",18);
->
-> ​    anim.sayhi();
->
-> ​    var wayou = new Programmer("李四",20);
->
-> ​    wayou.sayhi();
->
-> ​    wayou.program();
->
-> ​    </script>
+```
+· ==相等运算符，比较时会自动进行数据类型转换
+· ===严格相等运算符，比较时不进行隐式类型转换
+· Object.is同值相等算法，在===基础上对0和NaN特别处理
++0 === -0 //true
+NaN === NaN // false
+Object.is(+0, -0) // false
+Object.is(NaN, NaN) // true
+```
 >
 **字符串模板：**
 >
 > ES6中允许使用反引号` 来创建字符串，此方法创建的字符串里面可以包含由${ }包裹的变量
 >
-> <script>
->
-> //产生一个随机数
->
-> var num = Math.random();
->
-> //将这个数字输出到console
->
-> console.log(`输出随机数${num}`);
->
-> </script>
-
 >
 > **解构：**
 >
 > 自动解析数组或对象中的值。若一个函数要函数要返回多个值，常规的做法是返回一个对象，将每个值作为这个对象的属性返回。在ES6中，利用解构这一特性，可以直接返回一个数组，然后数组中的值会自动被解析到对应接收该值得变量中。
 >
-> <script>
->
-> var [x,y] = getVal(), //函数返回值解析
->
-> ​    [name, ,age] = ["wayou","male","secrect"]; //数组解析
->
-> function getVal(){
->
-> ​    return [1,2];
->
-> }
->
-> console.log(`x:${x},y:${y}`); //x:1,y:2
->
-> console.log(`name:${name},age:${age}`); //name:wayou,age:secrect
->
-> </script>
 >
 > **参数默认值，不定参数，拓展参数：**
 >
@@ -1794,41 +1396,24 @@ console.log(5)// 2 3 5 4 1
 >
 > 可以在定义函数的时候指定参数的默认值，而不用像以前那样通过逻辑或操作符来达到目的了。
 >
-> <script>
->
-> //传统方式设置默认方式
->
-> function sayHello(name){
->
-> ​    var name = name||'dude';
->
-> ​    console.log("Hello "+name);
->
-> }
->
-> sayHello(); //Hello dude
->
-> sayHello("wayou"); //Hello wayou
->
-> 
->
-> 
->
-> //ES6的默认参数
->
-> function sayHello2(name = "dude"){
->
-> ​    console.log("Hello "+name)
->
-> }
->
-> sayHello2(); //Hello dude
->
-> sayHello2("wayou"); //Hello wayou
->
-> </script>
->
-> **不定参数（拓展符）：**
+```
+//传统方式设置默认方式
+function sayHello(name){
+​    var name = name||'dude';
+​    console.log("Hello "+name);
+}
+sayHello(); //Hello dude
+sayHello("wayou"); //Hello wayou
+
+
+//ES6的默认参数
+function sayHello2(name = "dude"){
+​    console.log("Hello "+name)
+}
+sayHello2(); //Hello dude
+sayHello2("wayou"); //Hello wayou
+```
+**不定参数（拓展符）：**
 >
 > 不定参数是在函数中使用命名参数同时接收不定数量的未命名参数。这只是一种语法糖，在以前的JavaScript代码中我们可以通过arguments变量来达到这一目的。不定参数的格式是三个句点后跟代表所有不定参数的变量名。比如下面这个例子中，...x代表了所有传入add函数的参数。
 >
@@ -1836,18 +1421,19 @@ console.log(5)// 2 3 5 4 1
 >
 > //将所有参数想加的函数
 >
-> function add(...x){
->
-> ​    return x.reduce((m,n)=>m+n);
->
-> }
->
-> //传递任意个数的参数
->
-> console.log(add(1,2,3)); //输出:6
->
-> console.log(add(1,2,3,4,5)); //输出:15
->
+ ```
+ function add(...x){
+
+ ​    return x.reduce((m,n)=>m+n);
+ }
+
+ //传递任意个数的参数
+
+ console.log(add(1,2,3)); //输出:6
+
+ console.log(add(1,2,3,4,5)); //输出:15
+ ```
+
 > </script>
 >
 > reduce（）方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终计算为一个值。
@@ -2074,50 +1660,4 @@ console.log(5)// 2 3 5 4 1
 >
 > 先去 [www.baidu.com/robots.txt](https://link.juejin.im/?target=https://www.baidu.com/robots.txt) 找出常见的爬虫，然后在nginx上判断来访问页面用户的User-Agent是否是爬虫，如果是爬虫就用nginx方向代理到我们自己用nodejs+puppeteer实现的爬虫服务器上，然后用你的爬虫服务器怕自己的前后端分离的前端项目页面，增加扒页面的接受延时，保证异步渲染的接口数据返回，最后得到了页面的数据，返还给来访问的爬虫即可。
 >
-> **移动端常见的兼容性问题****:**
->
-> 随着手机的普及,移动端的开发也成了一个重要方向，但是由于设备的不统一，会造成一些兼容性问题。
->
-> \1. 设置文字行高为字体行高，解决文字上下边留白问题
->
-> \2. 给动态元素添加事件，需要使用事件委托（绑定到document），解绑也需要用委托的方式。苹果机点击事件不能触发。需要用touch系列事件
->
-> \3. Img标签src属性无值（php渲染过的），在苹果机上显示无图片，在安卓机上显示图片裂开。可添加alt属性及值
->
-> \4. 同一个标签多次绑定同一个事件（页面复杂情况容易出现这种情况，尽量避免这种情况），可以减少bug的出现，利于维护页面
->
-> \5. 在rem自适应页面使用精灵图。会容易出现图片缺角的问题（约1-2像素）。解决办法：使装精灵图的盒子变大，让图片居中显示
->
-> \6. 给选中的盒子增加一个标识，可以使用伪元素，减少标签的使用
->
-> \7. 有横向滚动条的内容被垂直触摸，在IOS机上无法滚动页面
->
-> \8. 当祖父元素使用overflow属性时，父元素采用transform属性会影响子元素定位position:absolute；导致子元素超出隐藏，建议用其他属性替换transform属性。
->
-> \9. click事件在IOS系统上有时会失效，给绑定click事件的元素加上cursor：pointer解决
->
-> \10. placeholder垂直居中问题：在IOS和Android中显示不同。解决方法是：在保证input输入文本垂直居中的条件下，给placehoder设置padding-top
->
-> **如何优化****SPA(单页面Web应用)****应用的首屏加载速度慢的问题？**
->
-> 1) 将公用的JS库通过script标签外部引入，减少app。bundel的大小，让浏览器并行下载资源文件，提高下载速度
->
-> 2) 在配置路由时，页面和组件使用懒加载的方式引入，进一步缩小App。bundel的体积，在调用某个组件时再加载对应的js文件
->
-> 3) 加一个首屏loading图，提升用户体验
->
-> **网页从输入网址到渲染完成经历了哪些过程？**
->
-> 1）输入网址
->
-> 2）发送到DNS服务器，并获取域名对应的web服务器对应的IP地址
->
-> 3）与web服务器建立TCP连接
->
-> 4）浏览器向web服务器发送http请求
->
-> 5）web服务器响应请求，并返回一定url的数据（或错误信息，或重定向的新url地址）
->
-> 6）浏览器下载web服务器返回的数据及解析html源文件
->
-> 7）生成DOM树，解析css和js，渲染页面，直至显示完成
+
