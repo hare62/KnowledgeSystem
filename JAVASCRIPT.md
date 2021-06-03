@@ -102,17 +102,39 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > 转字符串toString()/string()
 >
 > 数组转字符串 join();
->
-> ![https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/22E28F5BBF414C7EBFDE3353368BD5E7/4574](https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/22E28F5BBF414C7EBFDE3353368BD5E7/4574)
->
-> 
->
 > 字符串转数组: split();
->
-> ![https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/C9C4117086614B50AC93D889530D3050/4573](https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/C9C4117086614B50AC93D889530D3050/4573)
->
 > 
->
+> 总结：join和split是逆运算的感觉
+```
+join();
+const elements = ['Fire', 'Air', 'Water'];
+
+console.log(elements.join());
+// expected output: "Fire,Air,Water"
+
+console.log(elements.join(''));
+// expected output: "FireAirWater"
+
+console.log(elements.join('-'));
+// expected output: "Fire-Air-Water"
+
+
+split()
+const str = 'The quick brown fox jumps over the lazy dog.';
+
+const words = str.split(' ');
+console.log(words[3]);
+// expected output: "fox"
+
+const chars = str.split('');
+console.log(chars[8]);
+// expected output: "k"
+
+const strCopy = str.split();
+console.log(strCopy);
+// expected output: Array ["The quick brown fox jumps over the lazy dog."]
+
+```
 
 **栈与堆的区别****?**TODO
 >
@@ -126,42 +148,11 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 **作用域：**
 >
 >每一个变量、函数都有其作用的范围，超出范围不得使用，这个叫做作用域
->
- **全局变量、局部变量：**
->
-> 全局变量：在全局范围内声明的变量，如var a =1；
->
-> 只有赋值没有声明的值，如a =1（注：如果a=2在函数环境中，也是全局变量）
->
-> 局部变量：写入函数的变量，叫做局部变量，作用范围仅限函数内部
->
-> 作用：程序安全，内存的释放
-> 
-
-**变量声明提升：**
->
-> 在预编译阶段，编译器会把所有定义的变量全部提升到最顶部，即，把变量声明的语句会自动放置在最顶部。
->
-> ![https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/D06ED962BAD84E0D9BE5DA09A9B076C9/4575](https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/D06ED962BAD84E0D9BE5DA09A9B076C9/4575)
->
-> ![https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/03382ACBAF024749ACE39012147C4069/4577](https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/03382ACBAF024749ACE39012147C4069/4577)
->
-> ​      
->
-> ![https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/C6131B07D1ED4EA5B4B2A1CFD9A9AF80/4572](https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/C6131B07D1ED4EA5B4B2A1CFD9A9AF80/4572)
->
-> **console.log（a）何时会打印1？**
->
-> 当函数内部没有a这个变量的时候，才会向上一级查找
->
-> ![https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/CDBBED0684984CD19FFD3D71374C23FE/4578](https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/CDBBED0684984CD19FFD3D71374C23FE/4578)
->
-> 
->
 
 **作用域链：**
 >
 > 查找变量的过程。先找自己局部环境内部有没有声明或者是函数，如果有，则查看声明有无赋值或者是函数的内容，如果没有，则向上一级查找。
+>
 >
 
 **什么是面向对象编程及面向过程编程，他们的异同和优缺点**
@@ -196,8 +187,9 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 >
 > 3/如果函数使用了call/apply,this是作为参数传入对象
 >
-> 4/有时候this指向不明确的话,this会指向window,ES6中的箭头函数修改了this指向,永远指向作用域
->
+> 4/有时候this指向不明确的话,this会指向window,
+> 
+> 5/ES6中的箭头函数修改了this指向,永远指向作用域
 **js中this的用法（经典）：**TODO
 >this指向被函数调用的那个对象
 > 
@@ -211,6 +203,11 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > 实例化对象都有一个_proto_(隐式原型)属性，_proto_属性指向原型对象
 >
 **原型链：**从实例对象往上找构造这个实例的相关对象，然后这个关联的对象再往上找，找到创造它的上一级的原型对象，以此类推，一直到object.prototype原型对象终止,原型链结束.
+
+**构造函数**
+>专门用来生成
+​实例对象的函数，既对象的模板：类
+JavaScript 语言的对象体系，不是基于“类”的，而是基于构造函数（constructor）和原型（prototype）
 >
 **原型链中的原型对象中的内容****,是会被不同的实例,所共有的**
 >
@@ -222,8 +219,8 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 >
 **如何准确判断一个变量是数组类型****?**
 >
-> instanceof用于判断引用类型属于哪个构造函数的方法
->
+> 1.instanceof用于判断引用类型属于哪个构造函数的方法
+
 > var arr = [];
 >
 > arr  instanceof  Array;  //true
@@ -239,7 +236,9 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > instanceof是用来判断实例的_proto_和构造函数的prototype是否指向一个原型对象，
 >
 > 但是有一个弊端，只要出现在一条原型链上的，都会返回true（每个函数都有prototype，每个对象都有一个内部属性__proto__，其指向它的原型对象。原型对象也是一个对象，所以也有__proto__）
->
+
+>2.constructor
+
 > 这个时候要用实例__proto__.constructor更加严谨
 >
 > var arr = [ ];
@@ -247,8 +246,12 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > console.log(arr instanseof Array);  //true
 >
 > console.log(arr.__proto__.constructor === Array)  //true
->
-**☆call和apply的区别和作用?**
+
+>3.Array.isArray()
+
+>4.Object.prototype.toString.call(text) === '[object Array]'
+
+**☆call和apply以及bind的区别和作用?**
 >
 > apply和call都是调用一个对象的一个方法，用另一个对象替换当前对象。
 >
@@ -257,8 +260,10 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > 不同点：call可以传入多个参数、apply只能传入两个参数，所以其第二个参数往往是作为数组形式传入
 >
 > 存在意义：实现（多重）继承
+> bing是返回一个新的函数，不会改变原始函数的this指向
 >
-**继承的方法有哪些？**
+>
+**继承的方法有哪些？能具体说说嘛**TODO
 >
 > 原型链继承、构造继承、实例继承、拷贝继承、组合继承、寄生组合继承
 >
@@ -570,6 +575,9 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 >
 > 闭包的缺陷：由于闭包打破了函数作用域的束缚，导致里面的数据无法清除销毁，当数据过大时会导致数据溢出
 >
+>当函数可以记住并访问所在的词法作用域时，就产生了闭包，即使函数是在当前词法作用域之>外执行。
+>在定时器、事件监听器、ajax请求，跨窗口通信、web Workers或者任何其他的异步（或者同>步）任务中，只要使用了回调函数，实际就是在使用闭包
+>
 **事件代理（事件委托）****:**TODO
 >
 > 事件代理是将子元素的事件写一个父元素,让父元素代替处理,内部使用e.target,e.target就是触发这个事件的子元素
@@ -597,48 +605,40 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > \3. 让实例化对象中的this指向对象，并执行函数体
 >
 > \4. 判断实例化对象的返回值类型
+> 
+>创建一个空对象，作为将要返回的对象实例。
+>
+>构造函数的prototype属性指向空对象。
+>
+>将这个空对象赋值给函数内部的this关键字。
+>
+>开始执行构造函数内部的代码。
 >
 **异步编程的实现方式**
 >
-> -回调函数
->
-> 优点：简单、容易理解
->
-> 缺点：不利于维护，代码耦合高
->
-> -事件监听（采用时间驱动模式，取决于某个事件是否发生）
->
-> 优点：容易理解，可以绑定多个事件，每个时间可以指定多个回调函数
->
-> 缺点：事件驱动型，流程不够清晰
->
-> -发布、订阅（观察者模式）
->
-> 类似于事件监听，但是可以通过‘消息中心’，了解现在有多少发布者，多少订阅者
->
-> \- Promise对象
->
-> 优点：可以利用then方法，进行链式写法；可以书写错误时的回调函数；
->
-> 缺点：编写和理解，相对比较难
->
-> -Generator函数
->
-> 优点：函数体内外的数据交换、错误处理机制
->
-> 缺点：流程管理不方便
->
-> -async函数
->
-> 优点：内置执行器、更好的语义、更广的适用性、返回的是Promise，结构清晰
->
-> 缺点：错误处理机制
->
+```
+-1.回调函数
+ 优点：简单、容易理解
+ 缺点：不利于维护，代码耦合高
+-2.事件监听（采用时间驱动模式，取决于某个事件是否发生）
+ 优点：容易理解，可以绑定多个事件，每个时间可以指定多个回调函数
+ 缺点：事件驱动型，流程不够清晰
+-3.发布、订阅（观察者模式）
+ 类似于事件监听，但是可以通过‘消息中心’，了解现在有多少发布者，多少订阅者
+-4. Promise对象
+ 优点：可以利用then方法，进行链式写法；可以书写错误时的回调函数；
+ 缺点：编写和理解，相对比较难
+-5.Generator函数
+ 优点：函数体内外的数据交换、错误处理机制
+ 缺点：流程管理不方便
+-6.async函数
+ 优点：内置执行器、更好的语义、更广的适用性、返回的是Promise，结构清晰
+ 缺点：错误处理机制
+```
+
 **对原生****JS了解程度**
 >
 > 数据类型、运算、对象、Function、继承、闭包、作用域、原型链、事件、RegExp、JSON、Ajax、DOM、BOM、内存泄漏、跨域、异步装载、模板引擎、前端MVC、MVVM、路由、模块华、Canvas、ECMAScript
->
-> 
 >
 **js延迟加载的方法有哪些？**
 >
@@ -669,77 +669,54 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 **数组从小到大排序？**
 >
 > **方法一****:  sort方法**
->
-> var array = [1, 4, -8, -3, 6, 12, 9, 8];
->
-> ​      function compare(val1, val2) {
->
-> ​        return val1 - val2;
->
-> ​      };
->
-> ​      array.sort(compare);
->
-> ​      document.write(array);
+
+
+```
+var array = [1, 4, -8, -3, 6, 12, 9, 8];
+​      function compare(val1, val2) {
+​        return val1 - val2;
+​      };
+​array.sort(compare);
+​document.write(array);
+```
 >
 **方法二****:冒泡排序**
 >
-> var array = [1, 4, -8, -3, 12, 9];
->
-> ​    function sort(arr) {
->
-> ​      for(var i = 0;i < arr.length;i++){
->
-> ​        ////两两比较,如果前一个比后一个大,则交换位置
->
-> ​        for(var j = i + 1; j < arr.length; j++) {
->
-> ​          if(arr[i] > arr[j]) {
->
-> ​             var temp = arr[i];
->
-> ​             arr[i] = arr[j];
->
-> ​             arr[j] = temp;
->
-> ​          }
->
-> ​        }
->
-> ​      }
->
-> ​    }
->
-> sort(array);
->
-> console.log(array)
+```
+var array = [1, 4, -8, -3, 12, 9];
+​    function sort(arr) {
+​      for(var i = 0;i < arr.length;i++){
+​        ////两两比较,如果前一个比后一个大,则交换位置
+​        for(var j = i + 1; j < arr.length; j++) {
+​          if(arr[i] > arr[j]) {
+​             var temp = arr[i];
+​             arr[i] = arr[j];
+​             arr[j] = temp;
+​          }
+​        }
+​      }
+​    }
+sort(array)
+console.log(array)
+```
 >
 > 查看其他排序方式可以看:  https://www.cnblogs.com/real-me/p/7103375.html
 >
 **求从大到小排序可以先使数组从大到小排序****,然后添加reverse()方法，使数组顺序颠倒**
 >
 **为****string扩展一个trim方法,取掉字符串中的所有空格**
->
-> 方法一：trim（）方法------仅能取掉字符串首尾空格
->
-> var str = " a b c "
->
-> console.log("trim",str.trim());
->
-> //trim原理
->
-> function Trim(str){
->
-> ​    return str.replace(/(^\s*)|(\s*$)/g, "");
->
-> }
->
-> 方法二：去除字符中所有的空格
->
-> str.replace(/\s/ig,'')
->
-> 
->
+```
+方法一：trim（）方法------仅能取掉字符串首尾空格
+var str = " a b c "
+console.log("trim",str.trim());
+//trim原理
+function Trim(str){
+​    return str.replace(/(^\s*)|(\s*$)/g, "");
+}
+方法二：去除字符中所有的空格
+str.replace(/\s/ig,'')
+```
+
 **如何实现数组的随机排序****?**
 >
 > 最快是给数组添加原生sort()方法,可以随机数组,如果sort(),方法没有参数的话,就是依照数据的unicode ['junɪˌkod]码排序的
@@ -750,9 +727,9 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 >
 > Math.rendom()在0到1之间生成一个随机数
 >
-**图片懒加载**
 >
-**图片懒加载理解：**由于商城图片过多时，就会给图片加一个懒加载的缓冲效果。当图片进入可视化区域的时候才会加载，否则图片只是一个空标签。这样可以优化页面渲染速度，提升用户体验。
+**图片懒加载理解：**
+>由于商城图片过多时，就会给图片加一个懒加载的缓冲效果。当图片进入可视化区域的时候才会加载，否则图片只是一个空标签。这样可以优化页面渲染速度，提升用户体验。
 >
 **思路：**将页面中的所有img属性src用data-src代替，当页面滚动至此图片出现在可视区域时，用js取到该图片的data-src值赋给src。
 >
@@ -791,90 +768,6 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > 排除已加载的图片
 >
 > $(this).attr(‘src’) != $(this).attr(‘data-src’)  //排除已加载的图片
->
-**Jquery实现图片懒加载 :**
->
-> <script>
->
-> // 注意: 需要引入jQuery和underscore
->
-> $(function() {
->
-> ​     // 获取window的引用:
->
-> ​     var $window = $(window);
->
-> ​     // 获取包含data-src属性的img，并以jQuery对象存入数组:
->
-> ​     var lazyImgs = _.map($('img[data-src]').get(), function (i) {
->
-> ​       return $(i);
->
-> ​     });
->
-> ​     // 定义事件函数:
->
-> ​     var onScroll = function() {
->
-> ​       // 获取页面滚动的高度:
->
-> ​       var wtop = $window.scrollTop();
->
-> ​       // 判断是否还有未加载的img:
->
-> ​       if (lazyImgs.length > 0) {
->
-> ​         // 获取可视区域高度:
->
-> ​         var wheight = $window.height();
->
-> ​         // 存放待删除的索引:
->
-> ​         var loadedIndex = [];
->
-> ​         // 循环处理数组的每个img元素:
->
-> ​         _.each(lazyImgs, function ($i, index) {
->
-> ​           // 判断是否在可视范围内:
->
-> ​           if ($i.offset().top - wtop < wheight) {
->
-> ​             // 设置src属性:
->
-> ​             $i.attr('src', $i.attr('data-src'));
->
-> ​             // 添加到待删除数组:
->
-> ​             loadedIndex.unshift(index);
->
-> ​           }
->
-> ​         });
->
-> ​         // 删除已处理的对象:
->
-> ​         _.each(loadedIndex, function (index) {
->
-> ​           lazyImgs.splice(index, 1);
->
-> ​         });
->
-> ​       }
->
-> ​     };
->
-> ​     // 绑定事件:
->
-> ​     $window.scroll(onScroll);
->
-> ​     // 手动触发一次:
->
-> ​     onScroll();
->
-> </script>
->
-> onScroll()函数最后要手动触发一次，因为页面显示时，并未触发scroll事件。如果图片已经在可视化区域内，这些图片仍然是loading状态，需要手动触发一次，就可以正常显示。
 >
 **js中常见的内存泄漏：**
 >
@@ -1097,7 +990,6 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > null === undefined  //false
 >
 **字符串操作方法。**
->
 
 >
 
@@ -1213,7 +1105,6 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > 高阶函数是对其他函数进行操作的函数，可以将它们作为参数或通过返回它们。简单来说，高阶函数是一个函数，它接收函数作为参数或将函数作为输出返回。
 >
 > 
->
 
 **什么是****AJax?为什么使用Ajax?**
 >
@@ -1304,7 +1195,6 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > \11. setRequestHeader（name，value）：设置HTTP报头
 >
 > \12. send（body）：对服务器进行初始化。参数body包含请求的主体部分，对于POST请求为键值对字符串；对于GET请求，为null
->
 
 > 原生实现:
 >
@@ -1560,7 +1450,6 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > \5. let不允许在相同作用域内重复声明同一个变量名，var是允许的
 >
 > const定义的常量值，不能够重新赋值，如果值是一个对象，可以改变对象里边的属性值。const变量声明的时候必须初始化
->
 
 **Set数据结构**TODO
 >
@@ -1728,7 +1617,6 @@ UTC函数： 返回从1970年1月1日零时整算起的毫秒数(GMT)。
 > 
 >
 **有用过****promise吗？请写出下列代码的执行结果，并写出你的理解思路：**TODO
->
 ```
 setTimeout(()=>{
 ​    console.log(1);
@@ -1876,7 +1764,6 @@ console.log(5)// 2 3 5 4 1
 > console.log(`输出随机数${num}`);
 >
 > </script>
->
 
 >
 > **解构：**
@@ -2234,4 +2121,3 @@ console.log(5)// 2 3 5 4 1
 > 6）浏览器下载web服务器返回的数据及解析html源文件
 >
 > 7）生成DOM树，解析css和js，渲染页面，直至显示完成
->
