@@ -6,7 +6,7 @@
 
 **Javascript：**
 
-数据类型、运算、对象、function、继承、闭包、  作用域、事件、prototype、RegExp、JSON、Ajax、DOM、BOM、内存泄漏、跨域、异步请求、模板引擎、模块化、Flux、同构、算法、ECMAScript6、Nodejs、HTTP
+数据类型、运算、对象、function、继承、闭包、  作用域、原型链、事件、prototype、RegExp、JSON、Ajax、DOM、BOM、内存泄漏、跨域、异步请求、模板引擎、模块化、Flux、同构、算法、ECMAScript6、Nodejs、HTTP、前端MVC、MVVM、路由、模块华、Canvas、ECMAScript
 
 **其他：**
 
@@ -297,270 +297,7 @@ JavaScript 语言的对象体系，不是基于“类”的，而是基于构造
 >
 > }
 >
-**1.** **原型链继承**
->
-**核心：**将父类的实例作为子类的原型
->
-> //原型链继承
->
-> function Cat(){ }
->
-> Cat.prototype = new Animal();
->
-> Cat.prototype.name = "cat";
->
-> 
->
-> //Test Code
->
-> var cat = new Cat();
->
-> console.log(cat.name); //cat
->
-> console.log(cat.eat("fish")); //cat正在吃fish
->
-> console.log(cat.sleep()); //cat正在睡觉
->
-> console.log(cat instanceof Animal); //true
->
-> console.log(cat instanceof Cat); //true
->
-**特点：**
->
-> \1. 非常纯粹的继承关系，实例是子类的实例，也是父类的实例
->
-> \2. 父类新增原型方法、原型属性，子类都能够访问到
->
-> \3. 简单，易于实现
->
-**缺点：**
->
-> \1. 要想实现子类新增属性的方法,必须要在new Animal( )这样的语句之后执行,补鞥呢放在构造器中
->
-> \2. 无法实现多继承
->
-> \3. 来自原型对象的引用属性是所有实例共享的
->
-> \4. 创建子类实例时, 无法向父类构造函数传参
->
-**2.** **构造函数**
->
-> **核心：**使用父类的构造函数来增强子类实例，等于是赋值父类的实例属性给子类（没用的原型）
->
-> //构造函数
->
-> function Cat(name){
->
-> Animal.call(this);
->
-> this.name = name || "Tom"
->
-> }
->
-> //Test Code
->
-> var cat = new Cat();
->
-> console.log(cat.name); //Tom
->
-> console.log(cat.sleep()); //Tom正在睡觉
->
-> console.log(cat instanceof Animal); //false
->
-> console.log(cat instanceof Cat); //true
->
-**特点：**
->
-> \1. 解决了1中，子类实例共享父类引用属性的问题
->
-> \2. 创建子类实例时，可以向父类传递参数
->
-> \3. 可以实现多继承（call多个父类对象）
->
-**缺点：**
->
-> \1. 实例并不是父类的实例，只是子类的实例
->
-> \2. 只能继承父类的实例属性与方法，不能继承原型属性、方法
->
-> \3. 无法实现函数复用，每个子类都有父类实例函数的副本，影响性能
->
-**4.** **实例继承**
->
-**核心****:** 为父类实例添加新特性，作为子类实例返回
->
-> //实例继承
->
-> function Cat(name){
->
-> var instance = new Animal();
->
-> instance.name = name || "Tom";
->
-> return instance;
->
-> }
->
-> //Test Code
->
-> var cat = new Cat();
->
-> console.log(cat.name); //Tom
->
-> console.log(cat.sleep()); //Tom正在睡觉!
->
-> console.log(cat instanceof Animal); //true
->
-> console.log(cat instanceof Cat); //false
->
-**特点：**
->
-> \1. 不限制调用方法，不管是new子类（）还是子类（)，返回的对象具有相同的效果
->
-**缺点****:**
->
-> \1. 实例是父类的实例, 不是子类的实例
->
-> \2. 不支持多继承 
->
-**4. 拷贝继承**
->
-> //拷贝继承
->
-> function Cat(name){
->
-> var animal = new Animal();
->
-> for(var p in animal){
->
-> Cat.prototype[p] = animal[p];
->
-> }
->
-> Cat.prototype.name = name || "Tom"
->
-> }
->
-> //Test Code
->
-> var cat = new Cat();
->
-> console.log(cat.name); //Tom
->
-> console.log(cat.sleep()); //Tom正在睡觉!
->
-> console.log(cat instanceof Animal); //false
->
-> console.log(cat instanceof Cat); //true
->
-**特点：**
->
-> \1. 支持多继承
->
-**缺点：**
->
-> \1. 效率较低，内存占用高（因为要拷贝父类的属性）
->
-> \2. 无法获取父类不可枚举的方法（不可枚举方法，不能使用for in 访问到）
->
-**5.组合继承**
->
-**核心：**通过调用父类构造，继承父类的属性并保留传参的优点，然后通过将父类实例作为子类原型，实现函数复用
->
-> //组合继承
->
-> function Cat(name){
->
-> Animal.call(this);
->
-> this.name = name || "Tom";
->
-> }
->
-> Cat.prototype = new Animal();
->
-> //组合继承也需要修复构造函数的指向问题
->
-> Cat.prototype.constructor = Cat;
->
-> //Test Code
->
-> var cat = new Cat();
->
-> console.log(cat.name); //Tom
->
-> console.log(cat.sleep()); //Tom正在睡觉!
->
-> console.log(cat instanceof Animal); //true
->
-> console.log(cat instanceof Cat); //true
->
- **特点：**
->
-> \1. 弥补了方法2的缺陷，可以继承实例属性、方法，也可以继承原型属性和方法
->
-> \2. 既是子类的实例，也是父类的实例
->
-> \3. 不存在引用属性共享的问题
->
-> \4. 可传参
->
-> \5. 函数可复用
->
-**缺点：**
->
-> \1. 调用了两次父类构造函数，生成了两份实例（子类实例将子类原型上的那份屏蔽了）
->
- **6.  寄生组合继承**
->
-> **核心：**通过寄生方式，砍掉父类的实例属性，这样，在调用两次父类的构造的时候，就不会初始化两次实例方法、属性，避免了组合继承的缺点
->
-> //寄生组合继承
->
-> function Cat(name){
->
-> Animal.call(this);
->
-> this.name = name || "Tom"
->
-> }
->
-> (function(){
->
-> //创建一个没有实例方法的类
->
-> var Super = function(){};
->
-> Super.prototype = Animal.prototype;
->
-> //将实例作为子类的原型
->
-> Cat.prototype = new Super();
->
-> })();
->
-> //Test Code
->
-> var cat = new Cat();
->
-> console.log(cat.name); //Tom
->
-> console.log(cat.sleep()); //Tom正在睡觉!
->
-> console.log(cat instanceof Animal); //true
->
-> console.log(cat instanceof Cat); //true
->
-> //该实现没有修复constructoe
->
-> **特点****:**
->
-> \1. 堪称完美
->
-> **缺点****:**
->
-> \1. 实现较为复杂
->
+
 **☆什么是闭包？闭包有什么作用？**
 >
 > 由于在js中，变量到的作用域属于函数作用域，在函数执行后作用域会被清除、内存也会随之被回收，但是由于闭包是建立在一个函数内部的子函数，由于其可访问上级作用域的原因，即使上级函数执行完，作用域也不会随之销毁，这时的子函数---也就是闭包，便拥有了访问上级作用域中的变量权限，即使上级函数执行完后，作用域内的值也不会被销毁。
@@ -598,6 +335,7 @@ JavaScript 语言的对象体系，不是基于“类”的，而是基于构造
 >
 
 ```
+<!-- 
 new创建了一个对象，共经历了4个阶段：
 \1. 创建一个空对象
 \2. 设置原型链
@@ -607,6 +345,14 @@ new创建了一个对象，共经历了4个阶段：
 构造函数的prototype属性指向空对象。
 将这个空对象赋值给函数内部的this关键字。
 开始执行构造函数内部的代码。
+ -->
+
+
+function newOperation(constructFunc) { 
+    const newObj = Object.create(constructFunc.prototype); 
+    constructFunc.call(newObj); 
+    return newObj; 
+}
 ```
 >
 **异步编程的实现方式**
@@ -618,7 +364,7 @@ new创建了一个对象，共经历了4个阶段：
 -2.事件监听（采用时间驱动模式，取决于某个事件是否发生）
  优点：容易理解，可以绑定多个事件，每个时间可以指定多个回调函数
  缺点：事件驱动型，流程不够清晰
--3.发布、订阅（观察者模式）
+-3.发布、订阅（观察者模式）TODO要求会写＃＃＃＃＃＃
  类似于事件监听，但是可以通过‘消息中心’，了解现在有多少发布者，多少订阅者
 -4. Promise对象
  优点：可以利用then方法，进行链式写法；可以书写错误时的回调函数；
@@ -630,10 +376,6 @@ new创建了一个对象，共经历了4个阶段：
  优点：内置执行器、更好的语义、更广的适用性、返回的是Promise，结构清晰
  缺点：错误处理机制
 ```
-
-**对原生****JS了解程度**
->
-> 数据类型、运算、对象、Function、继承、闭包、作用域、原型链、事件、RegExp、JSON、Ajax、DOM、BOM、内存泄漏、跨域、异步装载、模板引擎、前端MVC、MVVM、路由、模块华、Canvas、ECMAScript
 >
 **js延迟加载的方法有哪些？**
 >
@@ -661,7 +403,7 @@ new创建了一个对象，共经历了4个阶段：
 >
 > 
 >
-**数组从小到大排序？**
+**数组从小到大排序？**　TODO可以整理下常见的排序方法。思想和代码＃＃＃＃＃＃
 >
 > **方法一****:  sort方法**
 
@@ -764,17 +506,11 @@ str.replace(/\s/ig,'')
 ```
 **父元素和子元素分别有点击事件的情况下****:**
 >
-> 点击父元素只会触发父元素事件,不会影响到子元素,如果点击子元素,会因为冒泡触发父元素的点击事件,可是阻止默认冒泡事件;
+> 点击父元素只会触发父元素事件,不会影响到子元素,如果点击子元素,会因为冒泡触发父元素的点击事件,可以阻止默认冒泡事件;
+> stoppropagation和cancelBubble的作用是一样的，都是用来阻止浏览器默认的事件冒泡行为其中celBubble是IE提供的方法。
 >
-**mouseover/mouseout与mouseenter/mouseleave的区别与联系**
->
-> \1. mouseover/mouseout是标准事件，所有浏览器都支持；mouseenter/mouseleave是IE5.5引入的特有事件,后来被DOM3标准采纳，现代浏览器也支持
->
-> mouseover/mouseout是冒泡事件;mouseenter/mouseleave不冒泡.需要为多个元素监听鼠标移入/移出事件时，推荐使用mouseover、mouseout托管，提高性能
->
-> 
->
-**ForEach和map的区别在哪里:** TODO
+
+**ForEach和map和for和for..in和for..of的区别在哪里:** TODO
 >
 
 ```
@@ -794,49 +530,36 @@ for...of一般用来遍历数组，不能遍历普通的对象，需要通过和
 某些类似数组的对象
 for in循环出的是key，for of循环出的是value
 推荐在循环对象属性的时候，使用for...in,在遍历数组的时候的时候使用for...of
+
+遍历对象时的异同：for循环无法用于循环对象，获取不到obj.length; for in 循环遍历对象的属性时，原型链上的所有属性都将被访问，解决方案：使用hasOwnProperty方法过滤或Object.keys会返回自身可枚举属性组成的数组
+eg: 
+var southSu = {name:'苏南',address:'深圳',age:18,sex:'男',height:176};
+for(var i=0;i<southSu.length;i++){
+  console.log(typeof i); //空
+  console.log(southSu[i]);//空
+}
+
+
+Object.prototype.test = '原型链上的属性,本文由平头哥联盟-首席填坑官∙苏南分享';
+ for(var k in southSu){
+  console.log(typeof k);//string
+  console.log(southSu[k]);// 苏南 , 深圳 , 18 , 男 , 176 ,本文由平头哥联盟-首席填坑官∙苏南分享
+}
+
+遍历数组时的异同： for循环 数组下标的typeof类型:number, for in 循环数组下标的typeof类型:string;
+eg:
+var southSu = ['苏南','深圳','18','男'];
+  for(var i=0;i<southSu.length;i++){
+  console.log(typeof i); //number
+  console.log(southSu[i]);// 苏南 , 深圳 , 18 , 男
+}
+
+var arr = ['苏南','深圳','18','男','帅气',"@IT菲酵犯缌?-首席填坑官"];
+ for(var k in arr){
+ console.log(typeof k);//string
+ console.log(arr[k]);// 苏南 , 深圳 , 18 , 男 , 帅气,平头哥联盟-首席填坑官
+}
 ```
-
-
-**DOM元素的e的e.getAttribute(propName)和e.propName有什么区别和联系?**TODO
->
-> e.getAttribute()是标准DOM操作文档元素属性的方法,具有通用性可在任意文档上使用，返回元素在源文件中设置的属性
->
-> e.propName通常是在HTML文档中访问特定元素的特性，浏览器解析元素后生产对应对象，这些对象的特性会根据特定规则结合属性设置得到，对于没有对应特性的属性，只能使用getAttribute进行访问
->
-> e.getAttribute（）返回值是源文件中设置的值，类型是字符串或者是null
->
-> e.propName返回值可能是字符串、布尔值、对象、undefined等
->
-> 大部分attribute与property是一一对应关系，修改其中一个会影响另外一个，如id、title等属性
->
-> 一些布尔属性<input hidden/>的检测设置需要hasAttribute和removeAttribute来完成,或者设置对应的property
->
-> 像<a href="../index.html">link</a>中的href属性，转换成property的时候需要通过转换得到完整的url
->
-> 一些attribute和property不是一一对应，如：form控件中<input value="hello"/>对应的是defaultValue，修改或设置value property修改的是控件当前值，setattribute修改value属性不会改变value property
->
-**offsetWidth/offsetHeight、clientWidth/clientHeight与scrollWidth/scrollHeight的区别？**
->
-> offfsetWidth、offsetHeight返回值包含content+padding+border，效果与e.getBoundingClientRect（）相同
->
-> clientWidth、clientHieight返回值值包含content+padding，如果有滚动条，也不包含滚动条
->
-> scrollWidth、scrollHeight返回值包含content+padding+溢出内容的尺寸
->
-**focus/blur与focusin/focusout的区别和联系**TODO
->
-> \1. focus/blur不冒泡，focusin/focusout冒泡
->
-> \2. focus/blur兼容性好，focusin、focusout在除fireFox外的浏览器下都保持良好兼容性，如需使用事件托管，可考虑FireFox下使用事件捕获
->
-> elem.addEventListener(‘focus’,handler,true)
->
-> \3. 可获得焦点的元素:
->
-> window/链接被点击或键盘操作/表单控件被点击或键盘操作/设置tabindex属性的元素被点击或键盘操作
->
-> \2. 
->
 **==与===的区别？**
 >
 > ===为等同符，当左边与右边的值与类型都完全相等时，会返回true；
@@ -845,7 +568,8 @@ for in循环出的是key，for of循环出的是value
 >
 **addEventListener监听点击事件与click事件有什么区别?**
 >
-> addEventListener事件可以对普通元素进行多个事件处理，click事件只能使元素运行最新的事件结果
+> addEventListener事件可以对普通元素进行多个事件处理，可以写多个addEventListener事件
+> click事件只能使元素运行最新的事件调用，只会创建一个事件函数。
 >
 > ![https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/C803E92F19ED48C3AFB76F32C8C9B331/4561](https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/C803E92F19ED48C3AFB76F32C8C9B331/4561)
 >
@@ -857,98 +581,15 @@ for in循环出的是key，for of循环出的是value
 >
 **null和undefined的区别?**
 >
-> null用来表示尚未存在的对象，常用来表示函数企图返回一个不存在对象
->
-> undefined主要指定义了变量，但是并未赋值
->
-> NAN （not a Number）不是一个明确数值的数字类型
->
-> ECMAScript认为undefined是从null派生出来的，他们的值是一样的，但是类型却不一样。
->
-> 所以
->
-> null == undefined   //true
->
-> null === undefined  //false
->
-**字符串操作方法。**
-
->
-
->
-**js的 for 跟for in 循环它们之间的区别？**
->
-> · 遍历数组时的异同： for循环 数组下标的typeof类型:number, for in 循环数组下标的typeof类型:string;
->
-> **var** southSu = ['苏南','深圳','18','男'];**for**(**var** i=0;i<southSu.length;i++){
->
-> console.log(**typeof** i); //number
->
-> console.log(southSu[i]);// 苏南 , 深圳 , 18 , 男
->
-> }**var** arr = ['苏南','深圳','18','男','帅气',"@IT菲酵犯缌?-首席填坑官"];**for**(**var** k **in** arr){
->
-> console.log(**typeof** k);//string
->
-> console.log(arr[k]);// 苏南 , 深圳 , 18 , 男 , 帅气,平头哥联盟-首席填坑官
->
-> }
->
-> · 遍历对象时的异同：for循环 无法用于循环对象，获取不到obj.length; for in 循环遍历对象的属性时，原型链上的所有属性都将被访问，解决方案：使用hasOwnProperty方法过滤或Object.keys会返回自身可枚举属性组成的数组
->
-> Object.prototype.test = '原型链上的属性,本文由平头哥联盟-首席填坑官∙苏南分享';**var** southSu = {name:'苏南',address:'深圳',age:18,sex:'男',height:176};**for**(**var** i=0;i<southSu.length;i++){
->
-> console.log(**typeof** i); //空
->
-> console.log(southSu[i]);//空
->
-> }
->
-> 
->
-> **for**(**var** k **in** southSu){
->
-> console.log(**typeof** k);//string
->
-> console.log(southSu[k]);// 苏南 , 深圳 , 18 , 男 , 176 ,本文由平头哥联盟-首席填坑官∙苏南分享
->
-> }
->
-> **push()****、****pop()****、****shift()****、****unshift()分别是什么功能？**
->
-> push 方法 将新元素添加到一个数组中，并返回数组的新长度值。
->
-> var a=[1,2,3,4]; a.push(5);
->
-> pop 方法 移除数组中的最后一个元素并返回该元素。
->
-> var a=[1,2,3,4]; a.pop();
->
-> shift 方法 移除数组中的第一个元素并返回该元素。
->
-> var a=[1,2]; alert(a.shift());
->
-> unshift 方法 将指定的元素插入数组开始位置并返回该数组。
->
-> **如果用原生****js给一个按钮绑定两个click事件？**
->
-> 使用事件监听，可给一个DOM节点绑定多个事件（addEventListener）
->
-> **拖拽会用到哪些事件？**
->
-> dragstart---拖拽开始时在被拖拽元素上触发此事件，监听器需要设置拖拽所需数据，操作系统拖拽文件到浏览器时不触发此事件
->
-> dragenter---拖拽鼠标进入元素时在该元素上触发，用于给拖放的元素设置视觉反馈，如高亮
->
-> dragover---拖拽时鼠标在目标元素上移动时触发，监听器通过组织浏览器默认行为设置元素为可拖放元素
->
-> dragleave---拖拽时鼠标移出目标元素时在目标元素上触发，此时监听器可以取消掉前面设置的视觉效果
->
-> drag---拖拽期间在被拖拽元素上连续触发
->
-> drop---鼠标在拖放目标上释放时，在拖放目标上触发，此时监听器需要收集数据并且执行所需操作，如果是从操作系统拖放文件到浏览器，需要取消浏览器默认行为
->
-> dragend---鼠标在拖放目标上释放时，在拖拽元素上触发，将元素从浏览器拖放到操作系统时不会触发此事件
+```
+null用来表示尚未存在的对象
+undefined主要指定义了变量，但是并未赋值
+NAN （not a Number）不是一个明确数值的数字类型
+ECMAScript认为undefined是从null派生出来的，他们的值是一样的，但是类型却不一样。
+所以
+null == undefined   //true
+null === undefined  //false
+```
 >
 > **JS中定时器有哪些？他们的区别及用法是什么？**
 >
@@ -956,32 +597,7 @@ for in循环出的是key，for of循环出的是value
 >
 > setInterval  会一直重复执行
 >
-> **document.write和innerHTML的区别?**
->
-> document.write是直接写入到页面的内容流,如果在写之前没有调用document.open，浏览器会自动调用open。每次写完关闭后重新调用该函数，会导致页面被重写
->
-> innerHTML则是DOM页面元素的一个属性，代表该元素的html内容，你可以精确到某一个具体的元素来进行更改。如果想修改document的内容，则需要修改document.documentElement.innerElement
->
-> innerHTML将内容写入某个DOM节点，不会导致页面全部重绘，innerHTML很多情况下都优于document.write，其原因在于其允许更精准的控制要刷新页面的那个部分
->
-> **createElement与createDocumentFragment****的区别****?**
->
-> 共同点：
->
-> \1. 添加子元素后返回值都是新添加的子元素
->
-> \2. 都可以通过appendChild添加子元素，并且子元素必须是node类型，不能为文本
->
-> \3. 若添加的子元素是文档中存在的元素，则通过appendChild在为其添加子元素时，会从文档中删除之存在的元素
->
-> 不同点：
->
-> \1. createElement创建的是元素节点，节点类型为1，createDocumentFragment创建的是文档碎片，节点类型是11
->
-> \2. 通过createElement新建元素必须指定元素tagName，因为其可用innerHTML添加子元素。通过createDocumentFragment则不必
->
-> \3. 通过createElement创建的元素是直接插入到文档中，而通过createDocumentFragment创建的元素插入到文档中的是他的子元素
->
+
 **JS中几种常见的高阶函数**
 >
 > 高阶函数是对其他函数进行操作的函数，可以将它们作为参数或通过返回它们。简单来说，高阶函数是一个函数，它接收函数作为参数或将函数作为输出返回。
@@ -1030,240 +646,35 @@ for in循环出的是key，for of循环出的是value
 >
 > 基于标准化的被广发支持的技术，不需要下载插件或小程序
 >
-**Ajax的缺点：**
->
-> Ajax不支持浏览器back按钮
->
-> 安全问题，Ajax暴露了与服务器交互的细节
->
-> 对搜索引擎的支持比较弱
->
-> 破坏了程序的异常机制
->
-> 不容易调试
->
-**XMLHttpRequest通用属性和方法**
->
-> \1. readyState：表示请求状态的整数、取值：
->
-> UNSENT(0) : 对象已创建
->
-> OPENED(1) : open( )成功调用，在这个状态下，可以xhr设置请求头，或者使用send（）发送请求
->
-> HEADERS——RECEIVED(2) : 所有重定向已经自动完成访问，并且最终响应的HTTP头已经收到
->
-> LOADING(3) : 响应体正在接收
->
-> DONE(4) : 数据传输完成或者传输产生错误
->
-> \2. onreadystatechange : readyState改变时调用的函数
->
-> \3. status : 服务器返回的HTTP状态码 (如 : 200、404)
->
-> \4. statusText : 服务器返回的HTTP状态信息 (如 : OK、No Content)
->
-> \5. responseText：作为字符串形式的来自服务器的完整响应式
->
-> \6. responseXML：Document对象，表示服务器的响应解析成的XML文档
->
-> \7. abort(): 取消异步HTTP请求
->
-> \8. getAllResponseHeaders() : 返回一个字符串,包含响应中服务器发送的全部HTTP包头。每个报头都是一个用冒号分割名、值对，并且使用一个回车、换行来分割报头行
->
-> \9. getResponseHeader（headerName）：返回haedName对应的报头值
->
-> \10. open（method，url，asynchronous，[user，password]）：初始化准备发送到服务器上的请求。method是HTTP方法，不区分大小写；url是请求发送的相对或绝对URL；asynchronous表示请求是否异步；user和password提供身份验证
->
-> \11. setRequestHeader（name，value）：设置HTTP报头
->
-> \12. send（body）：对服务器进行初始化。参数body包含请求的主体部分，对于POST请求为键值对字符串；对于GET请求，为null
-
-> 原生实现:
->
-> **var** script = document.createElement('script');
->
-> ​      script.type = 'text/javascript';
->
-> ​      // 传参并指定回调执行函数为onBack
->
-> ​      script.src = 'http://www.....:8080/login?user=admin&callback=onBack';
->
-> ​      document.head.appendChild(script);
->
-> ​    
->
-> ​      // 回调执行函数
->
-> ​      **function** **onBack**(res) {
->
-> ​        alert(JSON.stringify(res));
->
-> ​      }
->
-> \2. document.domain+iframe跨域
->
-> 此方案仅限主域相同,子域不同的跨域应用场景
->
-> 1>父窗口:(http://www.domain.com/a.html)
->
-> <iframe id="iframe" src="http://child.domain.com/b.html"></iframe>
->
->             <script>
->
-> ​        document.domain = 'domain.com';
->
-> ​        **var** user = 'admin';
->
-> ​      </script>
->
-> 2>子窗口(http://child.domain.com/b.html)
->
->   <script>
->
-> ​        document.domain = 'domain.com';
->
-> ​        // 获取父窗口中变量
->
-> ​        alert('get js data from parent ---> ' + window.parent.user);
->
-> ​      </script>
->
-> 弊端:查看页面渲染优化
->
-> \3. nginx代理跨域
->
-> \4. nodejs中间件代理跨域
->
-> \5. 后端在头部信息里面设置安全域名
->
-> 
 **fetch、ajax、axios之间的详细区别以及优缺点：**
->
-> \1. JQuery ajax
->
-> //JQuery ajax
->
-> $.ajax({
->
-> type: "POST",
->
-> url: url,
->
-> data: data,
->
-> dataType: dataType,
->
-> success: function(){},
->
-> error: function(){}
->
-> })
->
-> **优缺点：**
->
-> 本身针对MVC的编程，不符合现在前端MVVM的浪潮
->
-> 基于原生的XHR开发，XHR本身的架构不清晰，已经有了fetch的替代方案
->
-> JQuery整个项目太大，单纯使用ajax却要引入整个JQuery非常不合理（采取个性打包的方案又不能享受CDN服务）
->
 **2. axios**
 >
->
-> axios({
->
-> methods: "post",
->
-> url: url,
->
-> data:{
->
-> data_key: data_value,
->
-> ...
->
-> }
->
-> })
->
-> .then(function(response){
->
-> console.log(response)
->
-> })
->
-> .catch(function(error){
->
-> console.log(error)
->
-> })
->
-> **优缺点：**
->
-> 从node.js创建http请求
->
-> 支持Promise API
->
-> 客户端支持防止CSRF
->
-> 提供了一些并发请求的接口（重要，方便了很多的操作）
+```
+定义：Axios 是一个基于 promise 的 HTTP 库，可以用在浏览器和 node.js 中。
+特性：
+从浏览器中创建 XMLHttpRequests
+从 node.js 创建 http 请求
+支持 Promise API
+拦截请求和响应  ===>axios.interceptors.request.use(callback, errCallback),axios.interceptors.response.use(callback, errCallback)
+转换请求数据和响应数据
+取消请求  ===>使用 cancel token 取消请求
+自动转换 JSON 数据
+客户端支持防御 XSRF
+```
 >
 **3. fetch**
-> try{
->
-> let response = await fetch(url);
->
-> let data = response.json();
->
-> }catch(e){
->
-> console.log("Oops,error",e)
->
-> }
->
 > **优缺点：**
 >
-> 符合关注分离，没有讲输入、输出和用事件来跟踪的状态混杂在一个对象内
+```
+符合关注分离，没有讲输入、输出和用事件来跟踪的状态混杂在一个对象内
+更好更方便的写法
+更加底层，提供了丰富的API（request，response）
+脱离了XHR，是ES规范里的实现方式
+fetch只对网络请求报错，对400/500都当做成功的请求，需要封装去处理
+fetch默认不会带cookie，需要添加配置项
+fetch不支持abort，不支持超时控制，使用setTimeout以及Promise.reject的实现的超时控制并不能阻止请求过程继续在后台运行，造成了量的浪费
+```
 >
-> 更好更方便的写法
->
-> 更加底层，提供了丰富的API（request，response）
->
-> 脱离了XHR，是ES规范里的实现方式
->
-> fetch只对网络请求报错，对400/500都当做成功的请求，需要封装去处理
->
-> fetch默认不会带cookie，需要添加配置项
->
-> fetch不支持abort，不支持超时控制，使用setTimeout以及Promise.reject的实现的超时控制并不能阻止请求过程继续在后台运行，造成了量的浪费
->
-**为什么要用****axios？**
->
-> axios是一个基于Promise用于浏览器和nodejs的HTTP客户端，本身具有以下特点
->
-> 从浏览器中创建XMLHttpRequest
->
-> 从nodejs发出http请求
->
-> 支持Promise API
->
-> 拦截请求和响应
->
-> 转换请求和响应数据
->
-> 取消请求
->
-> 自动转换JSON数据
->
-> 客户端支持防止CSRF、XSRF
->
-**axios是什么？怎么使用？描述使用它实现登录功能的流程？**
->
-> 请求后台资源的模块。使用npm install axios -S安装
->
-> 然后发送的事跨域。需要在配置文件中config/index.js进行设置。
->
-> 后台如果是TP5则定义一个资源路由。js中使用import进行设置，然后.get或.post。成功返回在.then函数中，失败返回.catch函数中
 >
 **xml和json的区别？**
 >
@@ -1306,7 +717,7 @@ for in循环出的是key，for of循环出的是value
 >
 > 箭头函数最直观的三个特点：
 >
-> 不需要function关键字来创造
+> 不需要function关键字来创造 匿名函数
 >
 > 省略return关键字
 >
@@ -1478,22 +889,6 @@ sayHello2("wayou"); //Hello wayou
 >
 > </script>
 >
-> **for of值遍历：**
->
-> for in循环用于遍历数组，类数组或对象，ES6中新引入的for of循环功能相似，不同的是每次循环他提供的不是序号而是值
->
-> <script>
->
-> var someArray = ['a','b','c'];
->
-> for(v of someArray){
->
-> ​    console.log(v); //a,b,c
->
-> }
->
-> </script>
->
 > **iterator/generator:**
 >
 > iterator：它是这么一个对象，拥有一个next方法，这个方法返回一个对象{done，value}，这个对象包含两个属性，一个布尔类型的done和包含任意值的value。
@@ -1514,150 +909,12 @@ sayHello2("wayou"); //Hello wayou
 >
 > 将不同功能的代码分别写在不同文件中，各模块只需导出公共接口部分，然后通过模块的导入方式可以在其他地方使用。
 >
-> <script>
->
-> //单独的js文件,如:point.js
->
-> module "point" {
->
-> ​    export class Point {
->
-> ​      constructor (x,y){
->
-> ​        publice x = x;
->
-> ​        publice y = y;
->
-> ​      }
->
-> ​    }
->
-> }
->
-> 
->
-> //在需要引用模块的js文件内
->
-> //声明引用的模块
->
-> module point from './point.js';
->
-> //这里可以看出,尽管声明了引用的模块,还是可以通过指定需要的部分进行导入
->
-> import Point from "point"
->
-> var origin = new Ponit(0,0);
->
-> console.log(origin)
->
-> </script>
->
 **Map、Set和WeakMap、WeakSet** TODO
->
-> 这些是新加的集合类型，提供了更加方便的获取属性值的方法，不用像以前一样用hasOwnProperty来检查某个属性是属于原型链上的还是当前对象的。同时，在进行属性值添加与获取时有专门的get、set方法。
->
-> //Sets
->
-> var s = new Set();
->
-> s.add("hello").add("goodbye").add("hello");
->
-> s.size === 2;
->
-> s.has("hello")===true;
->
-> //Maps
->
-> var m = new Map();
->
-> m.set("hello",42);
->
-> m.set(s,34);
->
-> m.get(s) === 34;
->
-> 我们会把对象作为一个对象的键来存放属性值，普通集合类型比如简单对象会阻止垃圾回收器对这些作为属性键存在的对象回收，偶造成内存泄露的危险。而weakMap，weakSet则更加安全些，这些作为属性键的对象如果没有别的变量在引用它们，则会被回收释放掉，具体还看下面的例子。
->
-> //weak Maps
->
-> var wm = new WeakMap();
->
-> wm.set(s,{eatra:42});
->
-> wm.size === undefined;
->
-> 
->
-> //weak Sets
->
-> var ws = new WeakSet();
->
-> ws.add({data:42}); //因为添加到ws的这个临时对象没有其他变量引用它,所以ws不会保存它的值,也就是说这次添加其实没有意思
 >
 **Proxies**
 >
 > proxy可以监听对象身上发生了什么事情，并在这些事情发生后执行一些相应的操作。一下子让我们对一个对象有了很强的跟踪能力，同时咋数据绑定方面也很有用处。
 >
-> <script>
 >
-> //定义被侦听的目标对象
->
-> var engineer = {name:"Join",salary:50};
->
-> //定义处理程序
->
-> var interceptor = {
->
-> ​    set:function(receiver,property,value){
->
-> ​      console.log(property,"is changed to",value);
->
-> ​      receiver[property] = value;
->
-> ​    }
->
-> }
->
-> //创建代理以进行侦听
->
-> engineer = new Proxy(engineer,interceptor);
->
-> //做一些改动来触发代理
->
-> engineer.salary = 60; //控制台输出:salary is changed to 60
->
-> </script>
->
-> 上面代码，我们已经添加了注释，这里进一步解释。对于处理程序，是在被侦听的对象身上发生了相应事件之后，处理程序里面的方法会被调用，上面例子中我们设置了set的处理函数，表明。如果我们侦听对象的属性被更改，也就是被set了，那这个处理程序就会被调用，同时通过参数能够的值是哪个属性被更改，更改为什么值
->
->
-**Math、Number、String、Object的新API**
->
-> 对Math、Number、String还有Object等添加了许多新的API。
->
->
-
->
-> 浏览器
->
-> **前端需要注意哪些****SEO？（搜索引擎优化）：**
->
-> \1. 合理的title、description、keywords：搜索对着三项的权重逐个减小，title值强调中你的那即可，重要关键词出现不要超过2次，而且要靠前，不同页面title要有所不同；description把页面内容高度概括，长度合适，不可过分堆砌关键词，不同页面description有所不同；keywords列举出重要关键词即可
->
-> \2. 语义化的HTML代码，符合W3C规范：语义化代码让搜索引擎容易理解网页。
->
-> \3. 重要内容HTML代码放在最前：搜索引擎抓取HTML顺序是从上到下，有的搜索引擎对抓取长度有限制，保证重要内容一定会被抓取。
->
-> \4. 重要内容不要用js输出：爬虫不会执行JS获取内容
->
-> \5. 非装饰性图片必须加alt
->
-> \6. 少用iframe：搜索引擎不会抓取iframe中的内容
->
-> \7. 提高网站速度：网站速度是搜索引擎排序的一个重要指标
->
-> **前后端分离的项目如何****seo？（偏难）**
->
-> 先去 [www.baidu.com/robots.txt](https://link.juejin.im/?target=https://www.baidu.com/robots.txt) 找出常见的爬虫，然后在nginx上判断来访问页面用户的User-Agent是否是爬虫，如果是爬虫就用nginx方向代理到我们自己用nodejs+puppeteer实现的爬虫服务器上，然后用你的爬虫服务器怕自己的前后端分离的前端项目页面，增加扒页面的接受延时，保证异步渲染的接口数据返回，最后得到了页面的数据，返还给来访问的爬虫即可。
 >
 
