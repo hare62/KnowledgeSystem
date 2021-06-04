@@ -308,3 +308,76 @@ input设置id属性，label设置for属性，for属性的属性值为id属性值
 >
 > 7）生成DOM树，解析css和js，渲染页面，直至显示完成
 > 
+**mouseover/mouseout与mouseenter/mouseleave的区别与联系**
+>
+> \1. mouseover/mouseout是标准事件，所有浏览器都支持；mouseenter/mouseleave是IE5.5引入的特有事件,后来被DOM3标准采纳，现代浏览器也支持
+>
+> mouseover/mouseout是冒泡事件;mouseenter/mouseleave不冒泡.需要为多个元素监听鼠标移入/移出事件时，推荐使用mouseover、mouseout托管，提高性能
+>
+> 
+>**DOM元素的e的e.getAttribute(propName)和e.propName有什么区别和联系?**TODO
+>
+> e.getAttribute()是标准DOM操作文档元素属性的方法,具有通用性可在任意文档上使用，返回元素在源文件中设置的属性
+>
+> e.propName通常是在HTML文档中访问特定元素的特性，浏览器解析元素后生产对应对象，这些对象的特性会根据特定规则结合属性设置得到，对于没有对应特性的属性，只能使用getAttribute进行访问
+>
+> e.getAttribute（）返回值是源文件中设置的值，类型是字符串或者是null
+>
+> e.propName返回值可能是字符串、布尔值、对象、undefined等
+>
+> 大部分attribute与property是一一对应关系，修改其中一个会影响另外一个，如id、title等属性
+>
+> 一些布尔属性<input hidden/>的检测设置需要hasAttribute和removeAttribute来完成,或者设置对应的property
+>
+> 像<a href="../index.html">link</a>中的href属性，转换成property的时候需要通过转换得到完整的url
+>
+> 一些attribute和property不是一一对应，如：form控件中<input value="hello"/>对应的是defaultValue，修改或设置value property修改的是控件当前值，setattribute修改value属性不会改变value property
+>
+**offsetWidth/offsetHeight、clientWidth/clientHeight与scrollWidth/scrollHeight的区别？**
+>
+> offfsetWidth、offsetHeight返回值包含content+padding+border，效果与e.getBoundingClientRect（）相同
+>
+> clientWidth、clientHieight返回值值包含content+padding，如果有滚动条，也不包含滚动条
+>
+> scrollWidth、scrollHeight返回值包含content+padding+溢出内容的尺寸
+>
+**focus/blur与focusin/focusout的区别和联系**TODO
+>
+> \1. focus/blur不冒泡，focusin/focusout冒泡
+>
+> \2. focus/blur兼容性好，focusin、focusout在除fireFox外的浏览器下都保持良好兼容性，如需使用事件托管，可考虑FireFox下使用事件捕获
+>
+> elem.addEventListener(‘focus’,handler,true)
+>
+> \3. 可获得焦点的元素:
+>
+> window/链接被点击或键盘操作/表单控件被点击或键盘操作/设置tabindex属性的元素被点击或键盘操作
+>
+> \2. 
+> 
+ **document.write和innerHTML的区别?**
+>
+> document.write是直接写入到页面的内容流,如果在写之前没有调用document.open，浏览器会自动调用open。每次写完关闭后重新调用该函数，会导致页面被重写
+>
+> innerHTML则是DOM页面元素的一个属性，代表该元素的html内容，你可以精确到某一个具体的元素来进行更改。如果想修改document的内容，则需要修改document.documentElement.innerElement
+>
+> innerHTML将内容写入某个DOM节点，不会导致页面全部重绘，innerHTML很多情况下都优于document.write，其原因在于其允许更精准的控制要刷新页面的那个部分
+>
+> **createElement与createDocumentFragment****的区别****?**
+>
+> 共同点：
+>
+> \1. 添加子元素后返回值都是新添加的子元素
+>
+> \2. 都可以通过appendChild添加子元素，并且子元素必须是node类型，不能为文本
+>
+> \3. 若添加的子元素是文档中存在的元素，则通过appendChild在为其添加子元素时，会从文档中删除之存在的元素
+>
+> 不同点：
+>
+> \1. createElement创建的是元素节点，节点类型为1，createDocumentFragment创建的是文档碎片，节点类型是11
+>
+> \2. 通过createElement新建元素必须指定元素tagName，因为其可用innerHTML添加子元素。通过createDocumentFragment则不必
+>
+> \3. 通过createElement创建的元素是直接插入到文档中，而通过createDocumentFragment创建的元素插入到文档中的是他的子元素
+>
