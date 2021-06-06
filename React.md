@@ -6,6 +6,8 @@
 >
 > 一．初始化阶段
 >
+> construct
+>
 > componentWillMount:组件即将被装载、渲染到页面上
 >
 > render：组件在这里生成虚拟的DOM节点
