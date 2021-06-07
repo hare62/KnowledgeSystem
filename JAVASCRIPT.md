@@ -217,7 +217,7 @@ JavaScript 语言的对象体系，不是基于“类”的，而是基于构造
 >
 > 
 >
-**如何准确判断一个变量是数组类型****?**
+**如何准确判断一个变量是引用类型****?**
 >
 > 1.instanceof用于判断引用类型属于哪个构造函数的方法
 
@@ -225,7 +225,6 @@ JavaScript 语言的对象体系，不是基于“类”的，而是基于构造
 >
 > arr  instanceof  Array;  //true
 >
-> typeof  arr;   //object   typeof是无法判断是否为数组的
 >
 > **原理****:**
 >
@@ -240,16 +239,18 @@ JavaScript 语言的对象体系，不是基于“类”的，而是基于构造
 >2.constructor
 
 > 这个时候要用实例__proto__.constructor更加严谨
->
+>会有问题，因为实例是通过__proto__指向构造函数的原型对象来找到constructor。如果改写了构造函数的原型，或者改写了构造函数的constructor。都会让这种方法出错。
 > var arr = [ ];
 >
 > console.log(arr instanseof Array);  //true
 >
 > console.log(arr.__proto__.constructor === Array)  //true
 
->3.Array.isArray()
+**如何判断数组类型**
 
->4.Object.prototype.toString.call(text) === '[object Array]'
+>Array.isArray()
+
+>Object.prototype.toString.call(text) === '[object Array]'
 
 **☆call和apply以及bind的区别和作用?**
 >
@@ -336,15 +337,10 @@ JavaScript 语言的对象体系，不是基于“类”的，而是基于构造
 
 ```
 <!-- 
-new创建了一个对象，共经历了4个阶段：
-\1. 创建一个空对象
-\2. 设置原型链
-\3. 让实例化对象中的this指向对象，并执行函数体
-\4. 判断实例化对象的返回值类型
-创建一个空对象，作为将要返回的对象实例。
-构造函数的prototype属性指向空对象。
-将这个空对象赋值给函数内部的this关键字。
-开始执行构造函数内部的代码。
+1.创建一个新对象
+2.将构造函数的作用域赋给新对象(因此this就指向了这个新对象)
+3.执行构造函数的代码。(为这个新对象添加属性)
+4.返回新对象
  -->
 
 
@@ -367,7 +363,7 @@ function newOperation(constructFunc) {
 -3.发布、订阅（观察者模式）TODO要求会写＃＃＃＃＃＃
  类似于事件监听，但是可以通过‘消息中心’，了解现在有多少发布者，多少订阅者
 -4. Promise对象
- 优点：可以利用then方法，进行链式写法；可以书写错误时的回调函数；
+ 优点：可以利用then方法，进行链 】【【【【【【【【·······················=】式写法；可以书写错误时的回调函数；
  缺点：编写和理解，相对比较难
 -5.Generator函数
  优点：函数体内外的数据交换、错误处理机制
@@ -396,6 +392,7 @@ function newOperation(constructFunc) {
 > 目的：不让页面等待脚本下载和执行，从而异步加载页面其他内容。异步脚本一定会在页面load事件前执行。不能保证脚本会按顺序执行
 >
 > <script src=”XXX.js” async></script>
+defer要等到整个页面在内存中正常渲染结束（DOM 结构完全生成，以及其他脚本执行完成），才会执行；async一旦下载完，渲染引擎就会中断渲染，执行这个脚本以后，再继续渲染。一句话，defer是“渲染完再执行”，async是“下载完就执行”。另外，如果有多个defer脚本，会按照它们在页面出现的顺序加载，而多个async脚本是不能保证加载顺序的。
 >
 **动态创建****DOM方式：**
 >
@@ -915,6 +912,133 @@ sayHello2("wayou"); //Hello wayou
 >
 > proxy可以监听对象身上发生了什么事情，并在这些事情发生后执行一些相应的操作。一下子让我们对一个对象有了很强的跟踪能力，同时咋数据绑定方面也很有用处。
 >
+**修饰器** 来自ES6 +1
+>定义：是一个函数，用来修改类的行为。
+>注意：修饰器对类的行为是在代码编译时发生的，而不是在运行时发生的，
+>修饰器函数的第一个参数就是所要修饰的目标类。
+>修饰器函数修饰类的函数的时候，第一个参数是所要修饰的目标对象，第二个参数是所要修饰的属性名，第三个参数是该属性的描述对象。
+>修饰器可以修饰类，类的方法，类的属性。
+>修饰器不可以修饰函数，因为函数会有变量提升。所以没法修饰函数。
+>如果有多个修饰器，那么会从外到内进入修饰器，然后从内到外去执行修饰器。
+>还有一些很多修饰器库,略过......
+>应用：给类加静态属性，给实例对象加属性和方法(在类的原型上加属性和方法)
 >
->
+**创建自定义对象的方法**
+```
+1.new Object()
+缺点: 要创建多个对象，会产生大量的重复代码。
+
+2.字面量
+缺点：要创建多个对象，会产生大量的重复代码。(相同的方法没有得到复用。)
+
+3.工厂模式
+function createPerson(name){
+  var o = new Object()
+  o.name = name;
+  o.sayName = function(){
+    alert(this.name)
+  }
+}
+缺点：每次调用工厂模式的方式都会返回新的属性和方法。
+
+4.构造函数
+function CreatePerson(name) {
+  this.name = name
+  this.sayName = function(){
+    alert(this.name)
+  }
+}
+缺点：方法是不会共享的，每次创建对象都是新的方法。
+(1)没有显示的创建对象
+(2)直接将属性和方法赋给了this对象
+(3)没有return语句
+
+5.原型模式
+function Person(){}
+Person.prototype.name = 'hare'
+Person.prototype.sayName = function(){
+  alert(this.name)
+}
+缺点：原型链上的属性和方法被对象实例所共享
+原型中的所有属性是被很多实例所共享的，这种共享对于函数非常合适，对于那些包含基本值的属性倒也说的过去，通过在实例上添加一个同名属性，还可以隐藏原型中的对应属性，然而，对于包含引用类型值的属性来说。就会直接被共享。
+
+
+6.组合使用构造函数模式和原型模式
+function Person(name){
+  this.name = name
+}
+Person.prototype.sayName = function(){
+  alert(this.name)
+}
+特点：实例属性都是在构造函数中定义的，由所有实例共享的属性和方法则在原型中定义
+
+```
+**构造函数、原型、实例的关系**
+>每一个构造函数都有一个原型对象，原型对象都包含一个指向构造函数的指针(constructor),而实例都包含一个指向原型对象的内部指针([[Prototype]])。
+**原型链**
+
+**继承**
+```
+1.原型链
+function SuperType() {
+ this.colors = ["red", "blue", "green"];
+}
+function SubType() {}
+// 继承 SuperType
+SubType.prototype = new SuperType();
+let instance1 = new SubType();
+instance1.colors.push("black");
+console.log(instance1.colors); // "red,blue,green,black"
+let instance2 = new SubType();
+console.log(instance2.colors); // "red,blue,green,black"
+缺点：原型链上的属性和方法被对象实例所共享
+如果是简单数据类型会直接在实例上添加一个同名属性，可以直接隐藏原型中的对应属性。
+
+2.借用构造函数
+function SuperType() {
+ this.colors = ["red", "blue", "green"];
+}
+function SubType() {
+ // 继承 SuperType
+ SuperType.call(this);
+}
+let instance1 = new SubType();
+instance1.colors.push("black");
+console.log(instance1.colors); // "red,blue,green,black"
+let instance2 = new SubType();
+console.log(instance2.colors); // "red,blue,green"
+缺点：方法都在构造函数中定义，无法函数复用。
+优点：解决了原型中包含应用类型值所带来的问题。
+
+3.组合继承
+function SuperType(name){
+ this.name = name;
+ this.colors = ["red", "blue", "green"];
+}
+SuperType.prototype.sayName = function() {
+ console.log(this.name);
+};
+function SubType(name, age){
+ // 继承属性
+ SuperType.call(this, name);
+ this.age = age;
+}
+// 继承方法
+SubType.prototype = new SuperType();
+SubType.prototype.sayAge = function() {
+ console.log(this.age);
+};
+let instance1 = new SubType("Nicholas", 29);
+instance1.colors.push("black");
+console.log(instance1.colors); // "red,blue,green,black"
+instance1.sayName(); // "Nicholas";
+instance1.sayAge(); // 29
+let instance2 = new SubType("Greg", 27);
+console.log(instance2.colors); // "red,blue,green"
+instance2.sayName(); // "Greg";
+instance2.sayAge(); // 27
+
+优点：通过在原型上定义方法实现了函数复用，又能够保证每个实例都有它自己的属性。
+
+```
 
