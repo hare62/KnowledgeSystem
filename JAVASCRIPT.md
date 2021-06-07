@@ -50,6 +50,27 @@ length　　　　　　  表示取得当前数组长度 （常用）
 constructor　　　　 引用数组对象的构造函数
 prototype　　　　　通过增加属性和方法扩展数组定义
 
+Object对象常用方法
+静态方法
+Object.assign() 
+Object.create() 创建对象并且将该对象的原型指向传入的参数
+Object.defineProperty()   给对象添加一个属性并指定他的配置
+Object.defineProperties() 给对象添加多个属性并指定她们的配置
+Object.entries()   返回给定对象自身可枚举属性的 [key, value] 数组
+Object.values()    返回给定对象自身可枚举值的数组
+Object.is()     判断两个值是否相等
+Object.freeze()  冻结对象：其他代码不可以删除或者更改对象
+Object.seal()  封闭对象：其他代码不可以删除增加属性，但是对原有属性是可以更改的。
+Object.isSeal() 判断对象是否已经封闭
+Object.isFreeze() 判断对象是否已经冻结
+Object.getPrototypeOf()  返回指定对象的原型对象
+Object.setPrototypeOF()  设置对象的原型
+Object.getOwnPropertyNames() 返回数组，包含指定对象的所有可枚举和不可枚举的属性名
+Object.getOwnPropertySymbols() 返回一个数组，它包含了指定对象自身所有的符号属性
+Object.getOwnPropertyDescriptor() 返回对象指定的属性配置
+Object.isExtensible() 判断对象是否可扩展。
+Object.preventExtensions() 防止对象的任何扩展。方法让一个对象变的不可扩展，也就是永远不能再添加新的属性。
+
 String对象 
 charAt()　　　　　 　　　　返回指定索引的位置的字符 
 indexOf() 　　　　  　　　　从前向后检索字符串，看是否含有指定字符串 Boolean
@@ -1040,5 +1061,108 @@ instance2.sayAge(); // 27
 
 优点：通过在原型上定义方法实现了函数复用，又能够保证每个实例都有它自己的属性。
 
+```
+
+**Set**
+```
+es6提供的新的数据结构，类似数组，没有重复的值。
+通过add()方法向 Set 结构加入成员
+Set函数可以接受一个数组（或者具有 iterable 接口的其他数据结构）作为参数，用来初始化。
+
+Set 结构的实例有以下属性
+Set.prototype.constructor：构造函数，默认就是Set函数。
+Set.prototype.size：返回Set实例的成员总数。
+
+
+Set 实例的方法分为两大类：操作方法（用于操作数据）和遍历方法（用于遍历成员）。
+操作方法。
+
+Set.prototype.add(value)：添加某个值，返回 Set 结构本身。
+Set.prototype.delete(value)：删除某个值，返回一个布尔值，表示删除是否成功。
+Set.prototype.has(value)：返回一个布尔值，表示该值是否为Set的成员。
+Set.prototype.clear()：清除所有成员，没有返回值。
+
+Array.from方法可以将 Set 结构转为数组。
+Array.from(new Set(array)) //这就提供了去除数组重复成员的另一种方法
+[...new Set(array)] //等价
+
+遍历操作
+Set 结构的实例有四个遍历方法，可以用于遍历成员。
+
+Set.prototype.keys()：返回键名的遍历器
+Set.prototype.values()：返回键值的遍历器
+Set.prototype.entries()：返回键值对的遍历器
+Set.prototype.forEach()：使用回调函数遍历每个成员
+
+需要特别指出的是，Set的遍历顺序就是插入顺序。这个特性有时非常有用，比如使用 Set 保存一个回调函数列表，调用时就能保证按照添加顺序调用。
+
+扩展运算符（...）内部使用for...of循环，所以也可以用于 Set 结构。
+
+```
+**WeakSet**
+```
+WeakSet 结构与 Set 类似，也是不重复的值的集合。但是，它与 Set 有两个区别。
+
+首先，WeakSet 的成员只能是对象，而不能是其他类型的值。
+
+其次，WeakSet 中的对象都是弱引用
+WeakSet 结构有以下三个方法。
+
+WeakSet.prototype.add(value)：向 WeakSet 实例添加一个新成员。
+WeakSet.prototype.delete(value)：清除 WeakSet 实例的指定成员。
+WeakSet.prototype.has(value)：返回一个布尔值，表示某个值是否在 WeakSet 实例之中。
+
+WeakSet 没有size属性，没有办法遍历它的成员。
+
+WeakSet 不能遍历，是因为成员都是弱引用，随时可能消失，遍历机制无法保证成员的存在，很可能刚刚遍历结束，成员就取不到了。WeakSet 的一个用处，是储存 DOM 节点，而不用担心这些节点从文档移除时，会引发内存泄漏。
+```
+**Map**
+```
+size 属性 size属性返回 Map 结构的成员总数。
+Map.prototype.set(key, value) set方法设置键名key对应的键值为value，然后返回整个 Map 结构。如果key已经有值，则键值会被更新，否则就新生成该键。
+Map.prototype.get(key)  get方法读取key对应的键值，如果找不到key，返回undefined。
+Map.prototype.has(key)  has方法返回一个布尔值，表示某个键是否在当前 Map 对象之中。
+Map.prototype.delete(key)  delete方法删除某个键，返回true。如果删除失败，返回false。
+Map.prototype.clear()  clear方法清除所有成员，没有返回值。
+
+遍历方法
+Map 结构原生提供三个遍历器生成函数和一个遍历方法。
+
+Map.prototype.keys()：返回键名的遍历器。
+Map.prototype.values()：返回键值的遍历器。
+Map.prototype.entries()：返回所有成员的遍历器。
+Map.prototype.forEach()：遍历 Map 的所有成员。
+
+```
+
+**与其他数据结构的互相转换 § ⇧**
+```
+（1）Map 转为数组--> 扩展运算符（...）
+
+[...new Map([
+  [true, 7],
+  [{foo: 3}, ['abc']]
+])]
+
+ （2）数组 转为 Map
+
+new Map([
+  [true, 7],
+  [{foo: 3}, ['abc']]
+])
+
+（3）Map 转为对象 
+
+（4）对象转为 Map
+ let map = new Map(Object.entries({"a":1, "b":2}));
+
+（5）Map 转为 JSON
+（6）JSON 转为 Map
+```
+
+**WeakMap 的语法**
+
+```
+WeakMap 与 Map 在 API 上的区别主要是两个，一是没有遍历操作（即没有keys()、values()和entries()方法），也没有size属性。因为没有办法列出所有键名，某个键名是否存在完全不可预测，跟垃圾回收机制是否运行相关。这一刻可以取到键名，下一刻垃圾回收机制突然运行了，这个键名就没了，为了防止出现不确定性，就统一规定不能取到键名。二是无法清空，即不支持clear方法。因此，WeakMap只有四个方法可用：get()、set()、has()、delete()。
 ```
 

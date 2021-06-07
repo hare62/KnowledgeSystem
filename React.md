@@ -1,6 +1,6 @@
-> **React**
+**React**
 >
-> **react生命周期函数：**
+**react生命周期函数：**
 >
 > 这个问题考察组件的声明周期：
 >
@@ -24,17 +24,20 @@
 >
 > render：组件重新描绘
 >
+>componentDidMount：组件真正在被装载之后
+>
 > 三．销毁阶段
 >
 > componentWillUnmount：组件即将销毁
 >
-> **react性能优化是哪个周期函数？**
+**react性能优化是哪个周期函数？**
 >
 > shouldComponentUpdate这个方法用来判断是否需要调用render方法重新描绘dom。因为dom的描绘非常消耗性能，如果我们能在shouldComponentUpdate方法中能够写出更优化的dom diff算法，可以极大的提高性能。
+>  shouldComponentUpdate允许我们手动地判断是否进行组件更新，根据组件的应用场景设置函数的合理返回值能够帮我们避免不必要的更新。
 >
 > 详情参考：https：//segmentfault.com/a/1190000006254212
 >
-> **在生命周期中的哪一步你应该发起****AJAX请求？**
+**在生命周期中的哪一步你应该发起****AJAX请求？**
 >
 > 我们应当将AJAX请求放到componentDidMount函数中执行，主要原因有下：
 >
@@ -42,47 +45,48 @@
 >
 > 如果我们将AJAX请求放置在生命周期的其他函数中，我们并不能保证请求仅在组件挂载完毕后才会要求响应。如果我们的数据请求在组件挂载之前就完成，并且调用了setState函数将数据添加到组件状态中，对于为挂载的组件则会报错。而在componentDidMount函数中进行AJAX请求则能有效避免这个问题。
 >
-> **概述一下****REact中的事件处理逻辑**
+ **概述一下****REact中的事件处理逻辑**
 >
 > 为了解决跨浏览器兼容性问题，React会将浏览器原生事件封装为合成事件，传入设置的时间处理中。这里的合成事件提供了与原生事件相同的接口，不过它们屏蔽了底层浏览器的细节差异，保证了行为的一致性。另外有意思的是，react并没有直接将事件附着到子元素上，而是以单一事件监听器的方式将所有的时间发送到顶层进行处理。这样React在更新DOM的时候就不需要考虑如何处理附着在DOM上的事件监听器，最终达到优化性能的目的
 >
-> **如何告诉****React它应该编译生产环境版本？**
+**如何告诉****React它应该编译生产环境版本？**
 >
 > 通常情况下我们会使用Webpack的DefinePlugin方法将NODE_ENV变量这是为production。编译版本中React会忽略propType验证以及其他的告警信息，同时还降低了代码库的大小，React使用了Uglify插件来移除生产环境下不必要的注释等信息
 >
-> **调用****setState之后发生了什么？**
+**调用****setState之后发生了什么？**
 >
 > 在调用setState函数之后，React会将传入的参数对象与组件当前的状态合并，然后触发所谓的调和过程（Reconciliation）。经过调和过程，React会以相对高效的方法根据新的状态构建React元素树并且着手重新渲染整个UI界面。React得到元素树之后，React会自动计算出新的树与老树的节点差异，然后根据差异对界面进行最小化重渲染。在差异计算算法中，React能够相对精确的知道哪些位置发生了改变以及应该如何改变，这就保证了按需更新，而不是全部重新渲染。
 >
-> **传入****setState函数的第二个参数的作用是什么?**
+**传入****setState函数的第二个参数的作用是什么?**
 >
 > 该函数会在setState函数调用完成并且组件开始重新渲染的时候被调用，我们可以用该函数来监听渲染是否完成：
 >
-> this.setState(
->
-> {
->
-> username:"tylermcginnis33",
->
-> () => .console.log('setState has finished and the component has re-rendered');
->
-> }
->
-> )
->
-> 
->
-> **shouldComponentUpdate的作用是啥以及为何它这么重要？**
->
-> shouldComponentUpdate允许我们手动地判断是否进行组件更新，根据组件的应用场景设置函数的合理返回值能够帮我们避免不必要的更新。
+```
+this.setState(
+{
+username:"tylermcginnis33",
+() => .console.log('setState has finished and the component has re-rendered');
+}
+)
+```
 >
 > **createElement与cloneElement的区别是什么？**
 >
 > createElement函数是JSX编译之后使用的创建React Element的函数，而cloneElement则是用于复制某个元素并传入新的Props。
 >
 > **为什么我们需要使用****React提供的Children API而不是JS的map？**
->
-> 这个是react最新版的API，主要是为了使React能在更多的不同环境下更快、更容易构建。于是把react分成了react和react-dom两个部分。这样就为web版的react和移动端的React Native共享组件铺平了道路,也就是说我们可以跨平台使用想用的react组件.
+```
+因为this.props.children的值有三种可能：
+
+如果当前组件没有子节点，它的值就是undefined
+
+如果当前组件只有一个子节点，它的值就是我object
+
+如果当前组件有多个子节点，它的值就是array
+
+当this.props.children的值不是数组时，使用js的map会报错，React提供了工具方法React.Children来处理this.props.children,它已经将this.props.children的所有情况考虑在内了。
+```
+
 >
 > **React中的Element与Component的区别是？**
 >
@@ -98,7 +102,7 @@
 >
 > .renderToStaticMarkup服务器端渲染支持。
 >
-> **在什么情况下你会优先选择使用****class Component而不是functional Component？**
+**在什么情况下你会优先选择使用****class Component而不是functional Component？**
 >
 > 在组件主要包含内部状态或者使用到生命周期函数的时候使用class Component，否则使用函数式组件，否则使用函数式组件。
 >
@@ -152,65 +156,56 @@
 >
 > }
 >
-> **React中keys的作用是什么？**
+**React中keys的作用是什么？**
 >
-> Keys是React用于追踪哪些列表中元素被修改、被添加或者被移除的辅助标识。
->
-> render(){
->
-> return(
->
-> <ul>
->
-> {this.state.todoItems.map(({task,uid})=>{
->
-> return <li key={uid}>{task}</li>
->
-> })}
->
-> </ul>
->
-> )
->
-> }
+```
+ Keys是React用于追踪哪些列表中元素被修改、被添加或者被移除的辅助标识。
+
+ render(){
+ return(
+        <ul>
+          {this.state.todoItems.map(({task,uid})=>{
+          return <li key={uid}>{task}</li>
+        })}
+        </ul>
+    )
+}
+ ```
 >
 > 在开发过程中，我们需要保证某个元素的key在其统计元素中具有唯一性。在React Diff算法中React会借助元素的Key值来判断该元素是新近创建的还是被移动而来的元素，从而减少不必要的元素重渲染。此外React还需要借助key值来判断元素与本地状态的关联关系，因此我们绝不可忽视转换函数中key的重要性。
 >
 > **diff算法？**
 >
-> 把树结构按照层级分解，值比较同级元素。
->
-> 给列表结构的每个单元添加唯一的key属性，方便比较
->
-> React只会匹配项通class的component（这里面的class指的是组件的名称）
->
-> 合并操作，调用component的setState方法的时候，React将其标记为dirty到每一个事件循环结束，React检查所有标记dirt component重新绘制
->
-> 选择性子树渲染，开发人员可以重写shouldComponentUpdate提高diff的性能
+```
+把树结构按照层级分解，值比较同级元素。
+给列表结构的每个单元添加唯一的key属性，方便比较
+React只会匹配项通class的component（这里面的class指的是组件的名称）
+合并操作，调用component的setState方法的时候，React将其标记为dirty到每一个事件循环结束，React检查所有标记dirt component重新绘制选择性子树渲染，开发人员可以重写shouldComponentUpdate提高diff的性能
+```
 >
 > 参考链接：https：//segmentfault.com/a/1190000000606216
 >
-> **React性能优化方案？**
+ **React性能优化方案？**
 >
-> \1. 重写shouldComponentUpdate来避免不必要的dom操作
+ ```
+ \1. 重写shouldComponentUpdate来避免不必要的dom操作
+
+ \2. 使用production版本的react.js
+
+ \3. 使用key来帮助React识别列表中所有子组件的最小变化
+
+ 参考链接 : https://segmentfault.com/a/1190000006254212﻿
+ ```
+
+**为什么虚拟****DOM会提高性能？**
 >
-> \2. 使用production版本的react.js
->
-> \3. 使用key来帮助React识别列表中所有子组件的最小变化
->
-> 参考链接 : https://segmentfault.com/a/1190000006254212﻿
->
-> **为什么虚拟****DOM会提高性能？**
->
-> 虚拟dom相当于在js和真实dom中间加了一个缓存，利用dom diff算法避免了没有必要的dom操作，从而提高性能。
->
-> 具体实现步骤如下：
->
-> 用js对象结构表示DOM数的结构，然后这个树构造一个真正的DOM树，插到文档中
->
-> 当状态变更的时候，重新构造一颗树的对象树。然后用新的树和旧的树进行比较，记录两棵树的差异。
->
-> 把2所记录的差异应用到步骤1所构建的真正的DOM数上，视图就更新了。
+```
+虚拟dom相当于在js和真实dom中间加了一个缓存，利用dom diff算法避免了没有必要的dom操作，从而提高性能。
+具体实现步骤如下：
+用js对象结构表示DOM数的结构，然后这个树构造一个真正的DOM树，插到文档中
+当状态变更的时候，重新构造一颗树的对象树。然后用新的树和旧的树进行比较，记录两棵树的差异。
+把2所记录的差异应用到步骤1所构建的真正的DOM数上，视图就更新了。
+```
 >
 > **简述****flux思想**
 >
