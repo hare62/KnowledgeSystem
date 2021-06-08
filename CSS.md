@@ -7,50 +7,21 @@
 > W3C标准盒模型: 宽度 = 内容宽度  宽度/padding/border/margin都是单独分开的
 >
 > IE盒模型: 经常用的是IE盒模型 宽度 = 内容宽度+padding+border 是一起的
->
+
+**兄弟节点的margin重叠怎么解决**
+```
+解决方法：只设置一个元素的margin-top或者margin-bottom，避免margin重叠。
+```
+**父子节点的margin重叠怎么解决**
+```
+
+```
+**两列等高布局**
+```
+```
+
+
 **☆清除浮动的方式**
->
-> \1. 在子元素并级后面添加一个新元素，添加clear：both属性
->
-> 优点：通俗易懂，容易掌握
->
-> 缺点：添加无意义空标签，不方便后期维护
-
-
-> \2. 给父元素添加overflow:hidden
->
-> 优点：代码较少，简单方便
->
-> 缺点：不能配合定位使用
-
-
-> \3. ：after方法（作用于浮动元素的父元素）
->
-> .clearfix:after{
->
-> content:"";
->
-> display: block;
->
-> height:0;
->
-> clear:both;
->
-> visibility:hidden;
->
-> }
->
-> /* 为兼容IE6,IE7，因为ie6,ie7不能用after伪类 */
->
-> .clearfix{
->
-> zoom:1;
->
-> }
->
-> 优点：结构和语义化完全正确
->
-> 缺点：复用方式不当，会造成代码量增加
 
 
  **CSS选择器有哪些?哪些属性可以继承?**
@@ -76,40 +47,23 @@
 > 拓展内容: 
 >
 **伪类选择器和伪元素的区别****:**
->
-> 伪类用于向某些选择器添加特殊效果 (单冒号)
->
-> 伪元素用于将某个特殊的东西添加到某些元素的前后 (双冒号)
+所有css伪元素
+```
+::after	         p::after	       在每个 <p> 元素之后插入内容。
+::before	     p::before	       在每个 <p> 元素之前插入内容。
+::first-letter	 p::first-letter	   选择每个 <p> 元素的首字母。
+::first-line	 p::first-line	   选择每个 <p> 元素的首行。
+::selection	     p::selection	   选择用户选择的元素部分。
+```  
 
-
-> 伪类:
->
->
-> |      |                                                              |
-> | ---- | ------------------------------------------------------------ |
-> |      | ![https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/60F0BBAA2D5A4DBDB16F312BF79DAC6A/4560](https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/60F0BBAA2D5A4DBDB16F312BF79DAC6A/4560) |
-
-
-
-> 伪元素:
->
-> |      |                                                              |
-> | ---- | ------------------------------------------------------------ |
-> |      | ![https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/D13DBCCCCC1D45AE9A293F7DE41CA391/4559](https://note.youdao.com/yws/public/resource/b1780c5a1dfb87d402449badc06922b2/xmlnote/D13DBCCCCC1D45AE9A293F7DE41CA391/4559) |
->
-> 
->
-> 
->
-**::after/:after与::before/:before的区别?**
->
-> :before在元素之前添加效果/:after是在元素之后添加效果
->
-> :after/:before是CSS2提出的,兼容IE8
->
-> ::after/::before是CSS3为了区分伪类和伪元素的做出的差别,为了避免兼容性问题,习惯性的还是写:after/:before;
->
-> 
+**position有那些属性**
+```
+static    display的默认属性
+relative  相对于其正常位置进行定位
+absolute  相对于最近的定位祖先元素进行定位 注意：“被定位的”元素是其位置除 static 以外的任何元素。
+stricky   根据用户的滚动位置进行定位。
+fixed     相对于视口定位
+```
 >
 > 可继承样式: font-size/fon-family/color  [ul/li/ol/dl/dd/dt]
 >
@@ -948,4 +902,9 @@ margin: auto;    }
 >
 > Sass是基于Ruby语言的，而Less和Stylus可以基于NodeJS NPM下载相应库就进行编译
 >
-重绘回流
+**重绘回流**
+```
+回流指页面布局发生改变，比如：添加或者删除可见的DOM元素，元素位置改变，元素尺寸改变——边距、填充、边框、宽度和高度，内容改变都会发生回流，页面第一次加载就会发生回流，包括重绘。
+重绘就是指元素的外观颜色背景发生变化。
+回流必将引起重绘，而重绘不一定会引起回流。
+```

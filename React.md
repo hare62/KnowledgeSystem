@@ -29,29 +29,21 @@
 > 三．销毁阶段
 >
 > componentWillUnmount：组件即将销毁
+> 
 >
 **react性能优化是哪个周期函数？**
 >
-> shouldComponentUpdate这个方法用来判断是否需要调用render方法重新描绘dom。因为dom的描绘非常消耗性能，如果我们能在shouldComponentUpdate方法中能够写出更优化的dom diff算法，可以极大的提高性能。
->  shouldComponentUpdate允许我们手动地判断是否进行组件更新，根据组件的应用场景设置函数的合理返回值能够帮我们避免不必要的更新。
->
-> 详情参考：https：//segmentfault.com/a/1190000006254212
+> 这个生命周期函数可以用来判断是否需要执行后面的生命周期函数比如(componentWillUpdate,render,componentDidUpdate)
+> 避免了无效render，可以避免无效的重新渲染dom。便可以提高性能。
 >
 **在生命周期中的哪一步你应该发起****AJAX请求？**
 >
 > 我们应当将AJAX请求放到componentDidMount函数中执行，主要原因有下：
 >
-> React下一代调用算法Fiber会通过开始或停止渲染的方式优化应用性能，其会影响到componentWillMount的触发次数。对于componentWillMount这个生命周期函数的嗲用次数会不确定，React可能会多次频繁调用componentWillMount。如果我们将AJAX请求放到componentWillMount函数中，那么显而易见其会被触发多次，自然也就不是最好的选择
+> 页面的dom已经挂在完毕，可以请求数据重新render到页面上。在这方法中调用setState方法，会触发重渲染。所以，官方设计这个方法就是用来加载外部数据用的，或处理其他的副作用代码。
+> componentWillMount这个生命周期的dom还没有挂在到页面所以这个生命周期函数去请求数据然后想要去dom上渲染会找不到dom。
 >
 > 如果我们将AJAX请求放置在生命周期的其他函数中，我们并不能保证请求仅在组件挂载完毕后才会要求响应。如果我们的数据请求在组件挂载之前就完成，并且调用了setState函数将数据添加到组件状态中，对于为挂载的组件则会报错。而在componentDidMount函数中进行AJAX请求则能有效避免这个问题。
->
- **概述一下****REact中的事件处理逻辑**
->
-> 为了解决跨浏览器兼容性问题，React会将浏览器原生事件封装为合成事件，传入设置的时间处理中。这里的合成事件提供了与原生事件相同的接口，不过它们屏蔽了底层浏览器的细节差异，保证了行为的一致性。另外有意思的是，react并没有直接将事件附着到子元素上，而是以单一事件监听器的方式将所有的时间发送到顶层进行处理。这样React在更新DOM的时候就不需要考虑如何处理附着在DOM上的事件监听器，最终达到优化性能的目的
->
-**如何告诉****React它应该编译生产环境版本？**
->
-> 通常情况下我们会使用Webpack的DefinePlugin方法将NODE_ENV变量这是为production。编译版本中React会忽略propType验证以及其他的告警信息，同时还降低了代码库的大小，React使用了Uglify插件来移除生产环境下不必要的注释等信息
 >
 **调用****setState之后发生了什么？**
 >
@@ -388,4 +380,14 @@ React只会匹配项通class的component（这里面的class指的是组件的�
 > componentDidMount（）：虚拟DOM已经构建完成，你可以在这个函数开始获取其中的元素或者子组件了。需要注意的是，RN框架是先调用了子组件的componentDidMount（），然后调用父组件的函数。从这个函数开始，就尅和JS其他框架交互了，例如设置计时器setTimeout或者setInterval,或者发起网络请求.这个函数也是只被调用一次.这个函数之后,就进入了稳定运行状态,等待事件触发.
 >
 > **2.** **页面状态****state更改时：**
->
+
+react与传统前端的对比
+```
+传统前端更改试图需要操作dom，会大量去操作dom这样。后来发现，将前端工作抽象出来，其实视图的改变对应着数据的改变，那么如果前端能只记录数据的变化，就可以将视图对应改变的话，那么前端就省了很多操作dom的工作。我们把数据变化通知到视图层变化交给react去做。于是react就诞生了。react就是一个UI库。
+
+react不是直接操作dom而是映射出虚拟dom反应真实的dom，react用diff算法将新的虚拟dom和旧的虚拟dom比对，计算出变化的部分，再将变化的dom作用真实的dom上，把修改的虚拟dom重新渲染，极大的降低了前端亲自操作dom的工作，同时，得益于diff算法，性能上跟直接操作dom几乎一致。
+```
+**JSX**
+```
+jsx不是真的html,是通过react.createElement()的一种语法糖，返回的是ReactElement。这个可以加react的虚拟dom。
+```
