@@ -10,21 +10,21 @@
 >
 > componentWillMount:组件即将被装载、渲染到页面上
 >
-> render：组件在这里生成虚拟的DOM节点
+> render：应该是一个纯函数，不应该在这个函数中去setState,该函数返回一个reactElement对象
 >
-> componentDidMount：组件真正在被装载之后
+> componentDidMount：组件真正在被装载之后做一些额外的操作比如ajax请求
 >
-> 二．运行中状态
+> 二．更新状态
 >
-> componentWillReceiverProps：组件将要接收到属性的时候调用
+> componentWillReceiverProps：组件收到新的props的时候触发，参数nextProps就是新的props。可以和this.props比较。决定是否要setState.实现UI重新渲染
 >
 > shouldComponentUpdate：组件接受到新属性或者新状态的时候（可以返回false，接受数据后不更新，组织render调用，后面的函数不会被继续执行了）
 >
-> componentWillUpdate：组件即将更新不能修改属性和状态
+> componentWillUpdate：在render之前去调用，可以在渲染之前做一些准备工作，和componentwillMount类似。组件即将更新不能修改属性和状态
 >
 > render：组件重新描绘
 >
->componentDidMount：组件真正在被装载之后
+>componentDidUpdate：组件被更新之后执行的函数，和页面挂载完毕后的.重新渲染完成后立即执行，和componentDidMount一样
 >
 > 三．销毁阶段
 >
@@ -390,4 +390,32 @@ react不是直接操作dom而是映射出虚拟dom反应真实的dom，react用d
 **JSX**
 ```
 jsx不是真的html,是通过react.createElement()的一种语法糖，返回的是ReactElement。这个可以加react的虚拟dom。
+```
+**props**
+```
+父组件传给子组件的参数
+```
+**state**
+```
+每个组件内部的属性，state可以在constructor中通过this。state去定制初始值,然后根据这些值渲染不同的UI，当state数据变化时用setState去更新数据会触发render函数，dom重新渲染。
+```
+**组件初始化到更新组件的步骤**
+```
+1.创建虚拟dom=react.createElement()
+2.将虚拟dom挂在到真实dom中去。React。render(dom, getElementById('root'))
+2.2变化后的新的dom 
+3.diff(nextDom, this.dom) = newModifyDom计算出修改的dom 通过diff算法算出两颗树的不同
+4.将计算出来的不同作用到dom中去，更新UI
+```
+**action**
+```
+action就是一个object，用一个actionType来表明action的用途
+```
+**store**
+```
+store是一个单例，是整个程序所存的数据 
+```
+**reducer**
+```
+就是一个纯函数
 ```
